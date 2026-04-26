@@ -1,0 +1,2532 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>মনের কথা প্রিমিয়াম | Quran by Mood</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Hind+Siliguri:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Serif+Display:ital@0,1&display=swap" rel="stylesheet">
+<style>
+/* ===================== RESET ===================== */
+*,::before,::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ===================== TOKENS ===================== */
+:root{
+  --sad:#5BA8F5;--anxious:#F5B946;--lonely:#A97FE0;--grateful:#44D49A;
+  --happy:#FFDA6A;--hopeless:#F07A50;--seeking:#5DC9E8;--angry:#F05A5A;
+  --istighfar:#B8A9E0;
+  --bg:#07070F;--surface:rgba(255,255,255,0.04);--surface2:rgba(255,255,255,0.065);
+  --surface3:rgba(255,255,255,0.09);--glass:rgba(12,12,24,0.7);--glass2:rgba(18,18,36,0.8);
+  --text:#EDE9E3;--text2:#B8B3AA;--muted:#6B6780;--muted2:#4D4A60;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --active-color:#A97FE0;--active-glow:rgba(169,127,224,0.25);--active-soft:rgba(169,127,224,0.1);
+  --t-fast:0.18s cubic-bezier(0.4,0,0.2,1);--t-mid:0.35s cubic-bezier(0.4,0,0.2,1);
+  --t-slow:0.55s cubic-bezier(0.22,1,0.36,1);--t-spring:0.5s cubic-bezier(0.34,1.56,0.64,1);
+  --r-sm:12px;--r-md:18px;--r-lg:24px;--r-xl:32px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Hind Siliguri',sans-serif;background:var(--bg);color:var(--text);
+  min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ===================== BACKGROUND ===================== */
+#particle-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.7}
+.bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 50% at 20% 20%,rgba(169,127,224,0.07) 0%,transparent 70%),
+    radial-gradient(ellipse 50% 60% at 80% 80%,rgba(74,144,217,0.05) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 40% at 50% 50%,rgba(7,7,15,0) 0%,#07070F 100%);
+  transition:background 1.4s ease}
+.ambient-blob{position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0;
+  transition:background 1.4s ease,opacity 1.2s ease,transform 1.2s ease;will-change:transform}
+.blob-1{width:700px;height:700px;top:-250px;left:-180px;background:rgba(169,127,224,0.08);animation:blobDrift1 12s ease-in-out infinite}
+.blob-2{width:600px;height:600px;bottom:-180px;right:-120px;background:rgba(91,168,245,0.06);animation:blobDrift2 15s ease-in-out infinite}
+.blob-3{width:400px;height:400px;top:40%;left:30%;background:rgba(169,127,224,0.04);animation:blobDrift3 18s ease-in-out infinite;opacity:0;transition:opacity 1.2s ease,background 1.4s ease}
+.blob-3.active{opacity:1}
+@keyframes blobDrift1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-25px) scale(1.06)}66%{transform:translate(-15px,20px) scale(0.97)}}
+@keyframes blobDrift2{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(-25px,30px) scale(1.08)}70%{transform:translate(20px,-15px) scale(0.95)}}
+@keyframes blobDrift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.1)}}
+
+/* ===================== NAV ===================== */
+.nav-bar{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 20px;background:rgba(7,7,15,0.5);
+  backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
+  border-bottom:1px solid var(--border);transition:background var(--t-mid),border-color var(--t-mid)}
+.nav-logo{font-family:'DM Serif Display',serif;font-size:18px;color:var(--text);opacity:0.85;letter-spacing:0.01em}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-icon-btn{position:relative;width:36px;height:36px;border-radius:50%;background:var(--surface);
+  border:1px solid var(--border);color:var(--muted);font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);
+  transition:all var(--t-fast)}
+.nav-icon-btn:hover{color:var(--text);border-color:var(--border2);background:var(--surface2);transform:scale(1.08)}
+.nav-icon-btn.active-btn{color:#fff;border-color:var(--active-color);background:var(--active-soft)}
+.badge-count{position:absolute;top:-4px;right:-4px;background:var(--active-color);color:#fff;
+  font-size:9px;width:17px;height:17px;border-radius:50%;display:none;align-items:center;
+  justify-content:center;font-weight:700;border:2px solid var(--bg);transition:background var(--t-mid)}
+.badge-count.show{display:flex}
+.lang-toggle{display:flex;background:var(--surface);border:1px solid var(--border);border-radius:99px;overflow:hidden;backdrop-filter:blur(12px)}
+.lang-btn{padding:6px 11px;font-size:10px;font-family:'Hind Siliguri',sans-serif;font-weight:600;
+  border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all var(--t-fast);
+  letter-spacing:0.05em;position:relative;z-index:1}
+.lang-btn.active{background:var(--active-color);color:#fff;border-radius:99px}
+
+/* ===================== HEADER ===================== */
+header{position:relative;z-index:10;text-align:center;padding:110px 20px 44px}
+.bismillah{font-family:'Amiri',serif;font-size:clamp(20px,3.5vw,30px);color:rgba(255,255,255,0.3);
+  letter-spacing:0.06em;margin-bottom:28px;direction:rtl;animation:fadeRise 1.4s cubic-bezier(0.22,1,0.36,1) both}
+.header-ornament{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:20px;
+  animation:fadeRise 1.2s cubic-bezier(0.22,1,0.36,1) 0.1s both}
+.ornament-line{height:1px;width:80px;background:linear-gradient(to right,transparent,rgba(255,255,255,0.15),transparent)}
+.ornament-diamond{width:6px;height:6px;border-radius:1px;background:var(--active-color);
+  transform:rotate(45deg);transition:background var(--t-slow);box-shadow:0 0 12px var(--active-glow)}
+.site-title{font-family:'DM Serif Display',serif;font-size:clamp(42px,10vw,92px);font-weight:400;
+  line-height:0.95;letter-spacing:-0.02em;
+  background:linear-gradient(160deg,#fff 0%,rgba(255,255,255,0.7) 40%,var(--active-color) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:16px;transition:background 1s ease;animation:fadeRise 1.2s cubic-bezier(0.22,1,0.36,1) 0.2s both}
+.site-subtitle{font-size:11px;color:var(--muted);letter-spacing:0.22em;text-transform:uppercase;
+  animation:fadeRise 1.2s cubic-bezier(0.22,1,0.36,1) 0.35s both}
+@keyframes fadeRise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===================== DAILY AYAH ===================== */
+.daily-ayah-bar{position:relative;z-index:10;max-width:860px;margin:0 auto 28px;padding:0 20px}
+.daily-ayah-inner{background:var(--glass);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:16px 22px;display:flex;align-items:center;gap:16px;cursor:pointer;
+  transition:transform var(--t-mid),border-color var(--t-mid),box-shadow var(--t-mid),background var(--t-mid);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);position:relative;overflow:hidden}
+.daily-ayah-inner::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--active-soft) 0%,transparent 60%);
+  opacity:0;transition:opacity var(--t-mid);border-radius:inherit}
+.daily-ayah-inner:hover{transform:translateY(-2px);border-color:var(--border2)}
+.daily-ayah-inner:hover::before,.daily-ayah-inner.expanded::before{opacity:1}
+.daily-ayah-inner.expanded{border-radius:var(--r-lg) var(--r-lg) 0 0;border-bottom-color:transparent}
+.daily-ayah-pulse{width:36px;height:36px;border-radius:10px;background:var(--active-soft);
+  border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;transition:background var(--t-mid);animation:gentlePulse 3s ease-in-out infinite}
+@keyframes gentlePulse{0%,100%{box-shadow:0 0 0 0 var(--active-glow)}50%{box-shadow:0 0 0 6px transparent}}
+.daily-ayah-label{font-size:9.5px;text-transform:uppercase;letter-spacing:0.18em;color:var(--muted);margin-bottom:3px;font-weight:600}
+.daily-ayah-text{font-size:13.5px;color:var(--text2);line-height:1.6}
+.daily-expand{flex-shrink:0;color:var(--muted);font-size:16px;margin-left:auto;transition:transform var(--t-mid),color var(--t-mid)}
+.daily-ayah-inner.expanded .daily-expand{transform:rotate(180deg);color:var(--active-color)}
+.daily-full{max-height:0;overflow:hidden;background:var(--glass);border:1px solid var(--border);
+  border-top:none;border-radius:0 0 var(--r-lg) var(--r-lg);
+  transition:max-height 0.4s cubic-bezier(0.22,1,0.36,1),padding 0.3s ease;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:0 22px}
+.daily-full.open{max-height:600px;padding:18px 22px 22px}
+.daily-full-ar{font-family:'Amiri',serif;font-size:22px;direction:rtl;text-align:right;
+  color:var(--text);line-height:1.8;margin-bottom:10px}
+.daily-full-pron{font-size:12px;color:var(--active-color);margin-bottom:8px;font-style:italic;letter-spacing:0.02em}
+.daily-full-bn{font-size:14px;color:var(--text);line-height:1.9;padding-left:14px;
+  border-left:2px solid var(--active-color);margin-bottom:10px}
+.daily-full-ref{font-size:11px;color:var(--muted);letter-spacing:0.04em}
+.daily-full-actions{display:flex;gap:8px;margin-top:14px}
+
+/* ===================== MOOD PROMPT ===================== */
+.mood-prompt{position:relative;z-index:10;text-align:center;padding:0 20px 24px}
+.mood-prompt h2{font-size:clamp(17px,3vw,23px);font-weight:400;color:var(--text2);margin-bottom:6px;letter-spacing:0.01em}
+.mood-prompt p{font-size:12.5px;color:var(--muted)}
+
+/* ===================== SMART TEXT INPUT ===================== */
+.mood-text-wrap{position:relative;z-index:10;max-width:860px;margin:0 auto 24px;padding:0 20px}
+.mood-text-box{width:100%;background:var(--glass);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:14px 50px 14px 20px;font-family:'Hind Siliguri',sans-serif;font-size:14px;
+  color:var(--text);outline:none;resize:none;backdrop-filter:blur(20px);
+  transition:border-color var(--t-mid),box-shadow var(--t-mid);height:52px;line-height:1.5;
+  overflow:hidden}
+.mood-text-box::placeholder{color:var(--muted)}
+.mood-text-box:focus{border-color:var(--border2);box-shadow:0 0 0 3px var(--active-soft)}
+.mood-text-send{position:absolute;right:30px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;border-radius:50%;background:var(--active-color);border:none;
+  color:#fff;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all var(--t-fast);opacity:0;pointer-events:none}
+.mood-text-send.visible{opacity:1;pointer-events:all}
+.mood-text-send:hover{transform:translateY(-50%) scale(1.1)}
+.mood-detect-chip{display:inline-flex;align-items:center;gap:6px;background:var(--active-soft);
+  border:1px solid var(--active-color);border-radius:99px;padding:4px 12px;font-size:11px;
+  color:var(--active-color);margin-top:8px;animation:chipPop 0.3s var(--t-spring) both;display:none}
+@keyframes chipPop{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+.mood-detect-chip.show{display:inline-flex}
+.intensity-row{display:flex;align-items:center;gap:8px;margin-top:10px;display:none}
+.intensity-row.show{display:flex}
+.intensity-label{font-size:11px;color:var(--muted)}
+.intensity-btn{padding:4px 12px;border-radius:99px;border:1px solid var(--border);background:transparent;
+  color:var(--muted);font-size:11px;font-family:'Hind Siliguri',sans-serif;cursor:pointer;transition:all var(--t-fast)}
+.intensity-btn.active{background:var(--active-soft);border-color:var(--active-color);color:var(--active-color)}
+
+/* ===================== MOOD GRID ===================== */
+.mood-grid{position:relative;z-index:10;display:grid;grid-template-columns:repeat(4,1fr);
+  gap:10px;max-width:860px;margin:0 auto 52px;padding:0 20px}
+@media(max-width:600px){.mood-grid{grid-template-columns:repeat(2,1fr);gap:9px}}
+.mood-card{position:relative;overflow:hidden;background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:20px 14px 18px;cursor:pointer;text-align:center;
+  transition:transform var(--t-spring),border-color var(--t-mid),box-shadow var(--t-mid),background var(--t-mid);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  animation:cardReveal 0.6s var(--t-slow) both;will-change:transform}
+.mood-card:nth-child(1){animation-delay:0.05s}.mood-card:nth-child(2){animation-delay:0.10s}
+.mood-card:nth-child(3){animation-delay:0.15s}.mood-card:nth-child(4){animation-delay:0.20s}
+.mood-card:nth-child(5){animation-delay:0.25s}.mood-card:nth-child(6){animation-delay:0.30s}
+.mood-card:nth-child(7){animation-delay:0.35s}.mood-card:nth-child(8){animation-delay:0.40s}
+.mood-card:nth-child(9){animation-delay:0.45s}
+@keyframes cardReveal{from{opacity:0;transform:translateY(18px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.mood-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity var(--t-mid);border-radius:inherit}
+.mood-card:hover{transform:translateY(-4px) scale(1.02)}
+.mood-card:hover::before{opacity:1}
+.mood-card.active{transform:translateY(-6px) scale(1.04)}
+.mood-card.active::before{opacity:1}
+.card-glow{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);
+  width:80px;height:80px;border-radius:50%;opacity:0;transition:opacity var(--t-mid),transform var(--t-mid);
+  filter:blur(24px)}
+.mood-card:hover .card-glow,.mood-card.active .card-glow{opacity:0.6;transform:translateX(-50%) translateY(-10px)}
+.card-emoji{font-size:28px;margin-bottom:10px;display:block;transition:transform var(--t-spring)}
+.mood-card:hover .card-emoji{transform:scale(1.12) rotate(-5deg)}
+.mood-card.active .card-emoji{transform:scale(1.15) rotate(-8deg)}
+.card-name{font-size:13px;font-weight:600;letter-spacing:0.01em;margin-bottom:2px}
+.card-subtitle{font-size:10px;color:var(--muted);letter-spacing:0.04em}
+.istighfar-card{grid-column:1 / -1}
+@media(max-width:600px){.istighfar-card{grid-column:1 / -1}}
+
+/* ===================== CONTENT AREA ===================== */
+.content-area{position:relative;z-index:10;max-width:860px;margin:0 auto;padding:0 20px 80px}
+.content-panel{display:none;animation:panelReveal 0.5s var(--t-slow) both}
+.content-panel.active{display:block}
+@keyframes panelReveal{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===================== AYAH CARD ===================== */
+.ayah-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r-xl);
+  padding:32px;margin-bottom:16px;transition:border-color var(--t-mid),box-shadow var(--t-mid);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);position:relative;overflow:hidden}
+.ayah-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--active-color),transparent);opacity:0.4}
+.ayah-card:hover{border-color:var(--border2);box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.ayah-arabic{font-family:'Amiri',serif;font-size:clamp(22px,4vw,32px);direction:rtl;
+  text-align:right;color:var(--text);line-height:2;margin-bottom:16px;
+  text-shadow:0 2px 20px var(--active-glow)}
+.ayah-pronunciation{font-size:12.5px;color:var(--active-color);margin-bottom:12px;
+  font-style:italic;line-height:1.7;letter-spacing:0.02em;
+  transition:max-height 0.3s ease,opacity 0.3s ease,margin 0.3s ease;overflow:hidden}
+.ayah-pronunciation.hidden{max-height:0!important;opacity:0;margin-bottom:0;pointer-events:none}
+.ayah-meaning{font-size:15px;color:var(--text2);line-height:2;margin-bottom:16px;
+  padding-bottom:16px;border-bottom:1px solid var(--border)}
+.ayah-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.ayah-ref{font-size:11px;color:var(--muted);letter-spacing:0.05em}
+.ayah-actions{display:flex;gap:8px;align-items:center}
+.ayah-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:99px;
+  border:1px solid var(--border);background:transparent;color:var(--muted);
+  font-size:11.5px;font-family:'Hind Siliguri',sans-serif;cursor:pointer;
+  transition:all var(--t-fast);white-space:nowrap}
+.ayah-btn:hover{border-color:var(--border2);color:var(--text);background:var(--surface2)}
+.ayah-btn.fav-active{color:#FFD700;border-color:rgba(255,215,0,0.3);background:rgba(255,215,0,0.08)}
+.ayah-btn.playing{color:var(--active-color);border-color:var(--active-color);background:var(--active-soft)}
+.audio-wave{display:inline-flex;gap:2px;align-items:center;height:14px}
+.audio-wave span{width:2px;background:var(--active-color);border-radius:2px;animation:wave 0.8s ease-in-out infinite}
+.audio-wave span:nth-child(1){height:4px;animation-delay:0s}
+.audio-wave span:nth-child(2){height:10px;animation-delay:0.15s}
+.audio-wave span:nth-child(3){height:7px;animation-delay:0.3s}
+.audio-wave span:nth-child(4){height:12px;animation-delay:0.45s}
+.audio-wave span:nth-child(5){height:5px;animation-delay:0.6s}
+@keyframes wave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(0.4)}}
+.context-note{font-size:12px;color:var(--muted);line-height:1.8;margin-top:10px;
+  padding:12px 16px;background:var(--surface);border-radius:var(--r-sm);
+  border-left:2px solid var(--active-color)}
+
+/* ===================== PRONUNCIATION TOGGLE ===================== */
+.pron-toggle-bar{display:flex;align-items:center;justify-content:flex-end;gap:10px;
+  margin-bottom:16px;z-index:10;position:relative}
+.pron-toggle-label{font-size:11px;color:var(--muted)}
+.toggle-switch{width:40px;height:22px;border-radius:11px;background:var(--surface3);
+  border:1px solid var(--border);cursor:pointer;position:relative;transition:background var(--t-mid)}
+.toggle-switch.on{background:var(--active-color)}
+.toggle-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;
+  background:#fff;transition:transform var(--t-spring),box-shadow var(--t-mid);
+  box-shadow:0 1px 4px rgba(0,0,0,0.3)}
+.toggle-switch.on .toggle-knob{transform:translateX(18px)}
+
+/* ===================== OVERLAY PANELS ===================== */
+.overlay{position:fixed;inset:0;z-index:500;background:rgba(7,7,15,0.92);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:none;overflow-y:auto;animation:overlayIn 0.35s var(--t-slow) both}
+.overlay.show{display:flex;flex-direction:column}
+@keyframes overlayIn{from{opacity:0}to{opacity:1}}
+.overlay-header{display:flex;align-items:center;justify-content:space-between;
+  padding:20px 24px;border-bottom:1px solid var(--border);flex-shrink:0;
+  position:sticky;top:0;background:rgba(7,7,15,0.85);backdrop-filter:blur(20px);z-index:10}
+.overlay-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text)}
+.overlay-close{width:36px;height:36px;border-radius:50%;background:var(--surface);border:1px solid var(--border);
+  color:var(--muted);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all var(--t-fast)}
+.overlay-close:hover{background:var(--surface2);color:var(--text);transform:rotate(90deg)}
+.overlay-body{flex:1;padding:24px;max-width:760px;margin:0 auto;width:100%}
+
+/* ===================== FAVORITES ===================== */
+.fav-empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.fav-empty-icon{font-size:40px;margin-bottom:12px;opacity:0.4}
+.fav-item{background:var(--glass);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:20px;margin-bottom:12px;position:relative;animation:itemReveal 0.4s var(--t-slow) both;
+  backdrop-filter:blur(16px)}
+@keyframes itemReveal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fav-item-arabic{font-family:'Amiri',serif;font-size:20px;direction:rtl;text-align:right;
+  color:var(--text);line-height:1.8;margin-bottom:8px}
+.fav-item-pron{font-size:12px;color:var(--active-color);font-style:italic;margin-bottom:6px}
+.fav-item-meaning{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:10px}
+.fav-item-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.fav-item-tag{font-size:10px;color:var(--muted);padding:3px 10px;border-radius:99px;
+  border:1px solid var(--border);background:var(--surface)}
+.fav-remove{background:transparent;border:none;color:var(--muted);font-size:16px;cursor:pointer;
+  transition:color var(--t-fast);padding:4px}
+.fav-remove:hover{color:#F05A5A}
+
+/* ===================== HISTORY ===================== */
+.history-item{display:flex;gap:14px;margin-bottom:16px;animation:itemReveal 0.4s var(--t-slow) both}
+.history-timeline-dot{flex-shrink:0;width:10px;height:10px;border-radius:50%;
+  background:var(--active-color);margin-top:5px;box-shadow:0 0 8px var(--active-glow)}
+.history-timeline-line{position:absolute;left:19px;top:16px;bottom:-16px;
+  width:1px;background:var(--border)}
+.history-body{flex:1;background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--r-md);padding:14px 16px;backdrop-filter:blur(12px)}
+.history-time{font-size:10px;color:var(--muted);margin-bottom:6px}
+.history-mood-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;
+  padding:3px 10px;border-radius:99px;border:1px solid var(--border);margin-bottom:8px}
+.history-text{font-size:13px;color:var(--text2);line-height:1.7}
+
+/* ===================== JOURNAL ===================== */
+.journal-form{background:var(--glass);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:20px;margin-bottom:20px;backdrop-filter:blur(16px)}
+.journal-textarea{width:100%;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-md);padding:14px;font-family:'Hind Siliguri',sans-serif;font-size:14px;
+  color:var(--text);resize:none;min-height:120px;outline:none;transition:border-color var(--t-mid);line-height:1.7}
+.journal-textarea:focus{border-color:var(--border2)}
+.journal-form-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:8px}
+.journal-mood-tag{font-size:11px;color:var(--muted)}
+.journal-entry{background:var(--glass);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:18px 20px;margin-bottom:12px;backdrop-filter:blur(12px);animation:itemReveal 0.4s var(--t-slow) both}
+.journal-entry-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.journal-entry-time{font-size:10px;color:var(--muted)}
+.journal-entry-text{font-size:14px;color:var(--text2);line-height:1.8}
+.journal-entry-ayah{font-size:12px;color:var(--muted);margin-top:10px;padding-top:10px;
+  border-top:1px solid var(--border);font-style:italic}
+
+/* ===================== REFLECTION MODE ===================== */
+.reflection-overlay{position:fixed;inset:0;z-index:900;background:#03030A;
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 24px;text-align:center}
+.reflection-overlay.show{display:flex;animation:reflectIn 0.8s var(--t-slow) both}
+@keyframes reflectIn{from{opacity:0}to{opacity:1}}
+.reflection-close{position:absolute;top:24px;right:24px;width:40px;height:40px;
+  border-radius:50%;background:var(--surface);border:1px solid var(--border);
+  color:var(--muted);font-size:20px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;transition:all var(--t-fast);z-index:10}
+.reflection-close:hover{background:var(--surface2);color:var(--text)}
+.breath-orb{width:120px;height:120px;border-radius:50%;border:1px solid var(--active-color);
+  margin:0 auto 40px;position:relative;animation:breathe 7s ease-in-out infinite}
+.breath-orb::before{content:'';position:absolute;inset:8px;border-radius:50%;
+  background:var(--active-soft);animation:breathe-inner 7s ease-in-out infinite}
+.breath-orb::after{content:'';position:absolute;inset:-8px;border-radius:50%;
+  border:1px solid rgba(169,127,224,0.2);animation:breathe 7s ease-in-out infinite 0.5s}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(1.3);opacity:1}}
+@keyframes breathe-inner{0%,100%{transform:scale(1);opacity:0.4}50%{transform:scale(1.1);opacity:0.8}}
+.breath-label{font-size:11px;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;
+  margin-bottom:32px;animation:breatheText 7s ease-in-out infinite}
+@keyframes breatheText{0%,100%{opacity:0.4}40%{opacity:1}60%{opacity:1}}
+.reflection-arabic{font-family:'Amiri',serif;font-size:clamp(24px,5vw,38px);
+  direction:rtl;color:var(--text);line-height:1.8;margin-bottom:12px;
+  max-width:700px;text-shadow:0 4px 40px var(--active-glow)}
+.reflection-pron{font-size:13px;color:var(--active-color);font-style:italic;margin-bottom:20px}
+.reflection-meaning{font-size:clamp(14px,2vw,17px);color:var(--text2);line-height:2;
+  max-width:600px;margin:0 auto 32px}
+.reflection-prompt{font-size:13px;color:var(--muted);margin-bottom:16px;letter-spacing:0.02em}
+.reflection-textarea{width:100%;max-width:500px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-lg);padding:16px;font-family:'Hind Siliguri',sans-serif;font-size:13px;
+  color:var(--text);resize:none;min-height:90px;outline:none;transition:border-color var(--t-mid)}
+.reflection-textarea:focus{border-color:var(--active-color)}
+.reflection-save-btn{margin-top:12px;padding:10px 24px;border-radius:99px;
+  background:var(--active-color);border:none;color:#fff;font-family:'Hind Siliguri',sans-serif;
+  font-size:13px;cursor:pointer;transition:all var(--t-fast)}
+.reflection-save-btn:hover{transform:scale(1.05);opacity:0.9}
+
+/* ===================== ISTIGHFAR PANEL ===================== */
+.istighfar-section{margin-bottom:32px}
+.istighfar-intro{font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:24px;
+  padding:16px 20px;background:var(--surface);border-radius:var(--r-md);
+  border-left:2px solid var(--istighfar)}
+.istighfar-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r-xl);
+  padding:28px;margin-bottom:16px;backdrop-filter:blur(24px);
+  transition:border-color var(--t-mid),box-shadow var(--t-mid);position:relative;overflow:hidden}
+.istighfar-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--istighfar),transparent);opacity:0.5}
+.istighfar-card:hover{border-color:rgba(184,169,224,0.3);box-shadow:0 16px 48px rgba(0,0,0,0.3)}
+.istighfar-label{font-size:10px;color:var(--istighfar);letter-spacing:0.15em;
+  text-transform:uppercase;margin-bottom:12px;font-weight:600}
+.istighfar-arabic{font-family:'Amiri',serif;font-size:clamp(20px,3.5vw,28px);
+  direction:rtl;text-align:right;color:var(--text);line-height:2;margin-bottom:12px}
+.istighfar-pron{font-size:12.5px;color:var(--istighfar);font-style:italic;margin-bottom:10px;
+  line-height:1.7;transition:max-height 0.3s ease,opacity 0.3s ease,margin 0.3s ease;overflow:hidden}
+.istighfar-pron.hidden{max-height:0!important;opacity:0;margin-bottom:0}
+.istighfar-meaning{font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:12px}
+.istighfar-hadith{font-size:12px;color:var(--muted);line-height:1.8;padding:10px 14px;
+  background:var(--surface);border-radius:var(--r-sm);margin-bottom:14px;
+  border-left:2px solid var(--istighfar)}
+.istighfar-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ===================== REMINDER POPUP ===================== */
+.reminder-popup{position:fixed;bottom:24px;right:24px;z-index:600;
+  background:var(--glass2);border:1px solid var(--border2);border-radius:var(--r-lg);
+  padding:18px 20px;max-width:280px;backdrop-filter:blur(24px);
+  transform:translateY(120%);transition:transform 0.6s var(--t-spring),opacity 0.4s ease;
+  opacity:0;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.reminder-popup.show{transform:translateY(0);opacity:1}
+.reminder-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.reminder-title{font-size:13px;font-weight:600;color:var(--text)}
+.reminder-dismiss{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;
+  line-height:1;transition:color var(--t-fast)}
+.reminder-dismiss:hover{color:var(--text)}
+.reminder-body{font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:12px}
+.reminder-cta{display:inline-block;padding:7px 16px;border-radius:99px;background:var(--active-color);
+  color:#fff;font-size:11.5px;border:none;font-family:'Hind Siliguri',sans-serif;
+  cursor:pointer;transition:all var(--t-fast)}
+.reminder-cta:hover{transform:scale(1.05)}
+
+/* ===================== TOAST ===================== */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  z-index:700;background:var(--glass2);border:1px solid var(--border2);border-radius:99px;
+  padding:10px 20px;font-size:13px;color:var(--text);backdrop-filter:blur(20px);
+  opacity:0;transition:all 0.4s var(--t-spring);pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===================== ACTION BUTTON ===================== */
+.action-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:99px;
+  border:1px solid var(--border);background:var(--surface);color:var(--text2);
+  font-size:12.5px;font-family:'Hind Siliguri',sans-serif;cursor:pointer;
+  transition:all var(--t-fast)}
+.action-btn:hover{background:var(--surface2);border-color:var(--border2);color:var(--text)}
+.action-btn.primary{background:var(--active-color);border-color:var(--active-color);color:#fff}
+.action-btn.primary:hover{opacity:0.85}
+
+/* ===================== SECTION HEADER ===================== */
+.section-heading{font-family:'DM Serif Display',serif;font-size:28px;color:var(--text);
+  margin-bottom:6px;font-weight:400}
+.section-sub{font-size:13px;color:var(--muted);margin-bottom:24px}
+.section-actions{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+
+/* ===================== DAILY AMOL ===================== */
+.da-wrap{position:relative;z-index:10;max-width:860px;margin:0 auto 72px;padding:0 20px}
+.da-head{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px}
+.da-head-left{display:flex;align-items:center;gap:14px}
+.da-title{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text);font-weight:400;margin-bottom:2px}
+.da-sub{font-size:11.5px;color:var(--muted);letter-spacing:.03em}
+
+/* badge with soft fade on update */
+.da-badge{
+  background:rgba(68,212,154,.11);border:1px solid rgba(68,212,154,.28);color:#44D49A;
+  padding:6px 14px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap;
+  align-self:center;transition:opacity .4s ease}
+.da-badge.pulse{animation:daBadgePulse .6s ease-out}
+@keyframes daBadgePulse{
+  0%{box-shadow:0 0 0 0 rgba(68,212,154,.35)}
+  50%{box-shadow:0 0 0 8px rgba(68,212,154,0)}
+  100%{box-shadow:0 0 0 0 rgba(68,212,154,0)}}
+
+/* progress bar */
+.da-bar-wrap{height:3px;background:var(--surface3);border-radius:99px;margin-bottom:26px;overflow:hidden}
+.da-bar{height:100%;width:0%;background:linear-gradient(90deg,#44D49A,#5BA8F5);
+  border-radius:99px;transition:width .7s cubic-bezier(.22,1,.36,1)}
+
+/* slot container — fixed min-height so layout doesn't jump */
+#da-slot{position:relative;min-height:320px}
+
+/* ── CARD ── */
+.da-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:var(--r-xl);
+  padding:30px 28px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  position:relative;overflow:hidden;will-change:opacity,transform;
+  /* entry: fade up + subtle scale */
+  opacity:0;transform:translateY(14px) scale(0.98);
+  transition:opacity .5s cubic-bezier(.22,1,.36,1),
+             transform .5s cubic-bezier(.22,1,.36,1),
+             box-shadow .5s ease}
+.da-card.da-enter{opacity:1;transform:translateY(0) scale(1);
+  box-shadow:0 0 40px rgba(68,212,154,.07)}
+.da-card.da-exit{opacity:0;transform:translateY(-12px) scale(0.98);
+  transition:opacity .38s cubic-bezier(.4,0,1,1),
+             transform .38s cubic-bezier(.4,0,1,1)}
+
+/* top shimmer line */
+.da-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(68,212,154,.45),transparent)}
+
+/* soft edge glow on entry */
+.da-card::after{content:'';position:absolute;inset:0;border-radius:var(--r-xl);
+  box-shadow:inset 0 0 0 1px rgba(68,212,154,.06);
+  pointer-events:none;opacity:0;transition:opacity .6s ease}
+.da-card.da-enter::after{opacity:1}
+
+.da-step{font-size:10px;text-transform:uppercase;letter-spacing:.18em;
+  color:rgba(68,212,154,.85);font-weight:700;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px}
+.da-step::after{content:'';flex:1;height:1px;background:var(--border)}
+.da-name{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);margin-bottom:3px}
+.da-name-en{font-size:11px;color:var(--muted);letter-spacing:.08em;margin-bottom:16px}
+.da-ar{font-family:'Amiri',serif;font-size:clamp(20px,3.5vw,28px);direction:rtl;
+  text-align:right;color:var(--text);line-height:2;margin-bottom:6px}
+.da-prow{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.da-ptext{font-size:12.5px;color:#44D49A;font-style:italic;line-height:1.7;flex:1}
+.da-abtn{display:inline-flex;align-items:center;gap:5px;padding:5px 13px;border-radius:99px;
+  border:1px solid rgba(68,212,154,.3);background:rgba(68,212,154,.08);color:#44D49A;
+  font-size:11px;font-family:'Hind Siliguri',sans-serif;cursor:pointer;
+  transition:all var(--t-fast);flex-shrink:0;white-space:nowrap}
+.da-abtn:hover{background:rgba(68,212,154,.18);border-color:rgba(68,212,154,.5)}
+.da-abtn.playing{background:rgba(68,212,154,.22);border-color:#44D49A}
+.da-divider{height:1px;background:var(--border);margin:16px 0}
+.da-qty{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.da-qty-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.da-qty-val{font-size:13px;color:var(--text);font-weight:600;background:var(--surface2);
+  border:1px solid var(--border);border-radius:99px;padding:3px 12px}
+.da-fazilat{font-size:13px;color:var(--text2);line-height:1.85;padding:12px 16px;
+  background:var(--surface);border-radius:var(--r-sm);
+  border-left:2px solid rgba(68,212,154,.35);margin-bottom:22px}
+
+/* complete button — fades out on lock */
+.da-btn{width:100%;padding:14px 20px;border-radius:var(--r-lg);
+  background:linear-gradient(135deg,rgba(68,212,154,.13),rgba(91,168,245,.08));
+  border:1px solid rgba(68,212,154,.38);color:#44D49A;
+  font-family:'Hind Siliguri',sans-serif;font-size:14px;font-weight:600;
+  cursor:pointer;letter-spacing:.02em;position:relative;overflow:hidden;
+  transition:background .3s,border-color .3s,transform .3s cubic-bezier(.22,1,.36,1),
+             box-shadow .3s,opacity .4s ease}
+.da-btn:hover{background:linear-gradient(135deg,rgba(68,212,154,.23),rgba(91,168,245,.15));
+  border-color:rgba(68,212,154,.65);transform:translateY(-2px);
+  box-shadow:0 8px 26px rgba(68,212,154,.18)}
+.da-btn:active{transform:translateY(0)}
+.da-btn.locked{opacity:0;pointer-events:none}
+.da-btn-rip{position:absolute;inset:0;background:rgba(68,212,154,.2);
+  opacity:0;transition:opacity .3s;border-radius:inherit;pointer-events:none}
+
+/* ── FINISH SCREEN ── */
+.da-finish{
+  text-align:center;padding:64px 24px 52px;position:relative;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1)}
+.da-finish.da-finish-show{opacity:1;transform:translateY(0)}
+
+/* breathing glow aura */
+.da-finish-glow{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:320px;height:320px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(68,212,154,.14) 0%,rgba(255,255,255,.03) 45%,transparent 70%);
+  animation:daBreath 4s ease-in-out infinite}
+@keyframes daBreath{
+  0%,100%{opacity:.65;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.13)}}
+
+/* moon float */
+.da-finish-moon{
+  font-size:54px;display:block;margin-bottom:20px;
+  animation:daFloat 5s ease-in-out infinite}
+@keyframes daFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}}
+
+.da-finish-title{
+  font-family:'DM Serif Display',serif;font-size:30px;color:var(--text);
+  margin-bottom:12px;
+  text-shadow:0 0 40px rgba(68,212,154,.25),0 0 80px rgba(255,255,255,.05)}
+.da-finish-msg{font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:32px;
+  max-width:320px;margin-left:auto;margin-right:auto}
+.da-restart{padding:10px 26px;border-radius:99px;border:1px solid var(--border2);
+  background:var(--surface2);color:var(--text2);font-family:'Hind Siliguri',sans-serif;
+  font-size:13px;cursor:pointer;transition:all var(--t-fast)}
+.da-restart:hover{border-color:rgba(68,212,154,.4);color:#44D49A;background:rgba(68,212,154,.08)}
+
+/* ===================== SCROLL BAR ===================== */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--muted2);border-radius:2px}
+
+/* ===================== UTILITIES ===================== */
+.hidden{display:none!important}
+.flex-row{display:flex;align-items:center;gap:8px}
+.mt8{margin-top:8px}.mt16{margin-top:16px}.mb8{margin-bottom:8px}
+.text-muted{color:var(--muted);font-size:12px}
+.divider{height:1px;background:var(--border);margin:20px 0}
+.loading-dots::after{content:'...';animation:dots 1.2s steps(4,end) infinite}
+@keyframes dots{0%,20%{content:'.'}40%{content:'..'}60%,100%{content:'...'}}
+
+/* ===================== TASBEEH COUNTER ===================== */
+.tasbeeh-fab{position:fixed;bottom:28px;right:28px;z-index:400;display:flex;flex-direction:column;
+  align-items:center;gap:0}
+.tasbeeh-orb{width:64px;height:64px;border-radius:50%;cursor:pointer;border:none;
+  background:conic-gradient(from 0deg,#A97FE0,#5BA8F5,#44D49A,#F5B946,#F07A50,#A97FE0);
+  background-size:200% 200%;animation:orbSpin 5s linear infinite;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 28px rgba(169,127,224,0.45),0 4px 16px rgba(0,0,0,0.4);
+  transition:transform var(--t-spring),box-shadow var(--t-fast);position:relative;
+  -webkit-tap-highlight-color:transparent}
+.tasbeeh-orb:active{transform:scale(0.92)}
+.tasbeeh-orb:hover{transform:scale(1.08);box-shadow:0 0 40px rgba(169,127,224,0.6),0 6px 20px rgba(0,0,0,0.5)}
+@keyframes orbSpin{0%{filter:hue-rotate(0deg)}100%{filter:hue-rotate(360deg)}}
+.tasbeeh-orb-inner{width:52px;height:52px;border-radius:50%;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;flex-direction:column}
+.tasbeeh-count-display{font-size:18px;font-weight:700;color:#fff;line-height:1;
+  font-family:'Cormorant Garamond',serif}
+.tasbeeh-sub-label{font-size:8px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase}
+.tasbeeh-ripple{position:absolute;inset:0;border-radius:50%;background:rgba(255,255,255,0.25);
+  transform:scale(0);opacity:1;pointer-events:none;animation:none}
+.tasbeeh-ripple.pop{animation:ripplePop 0.4s ease-out forwards}
+@keyframes ripplePop{to{transform:scale(1.6);opacity:0}}
+.tasbeeh-reset-btn{margin-top:6px;font-size:10px;color:var(--muted);background:none;border:none;
+  cursor:pointer;font-family:'Hind Siliguri',sans-serif;transition:color var(--t-fast);
+  letter-spacing:0.05em}
+.tasbeeh-reset-btn:hover{color:var(--text)}
+.tasbeeh-panel{position:fixed;bottom:100px;right:28px;z-index:399;
+  background:var(--glass2);border:1px solid var(--border2);border-radius:var(--r-lg);
+  padding:16px 20px;min-width:190px;backdrop-filter:blur(24px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  transform:translateY(16px) scale(0.95);opacity:0;pointer-events:none;
+  transition:all 0.3s var(--t-spring)}
+.tasbeeh-panel.open{transform:translateY(0) scale(1);opacity:1;pointer-events:all}
+.tasbeeh-panel-title{font-size:11px;color:var(--muted);letter-spacing:0.12em;
+  text-transform:uppercase;margin-bottom:12px}
+.tasbeeh-big-num{font-family:'DM Serif Display',serif;font-size:56px;color:var(--text);
+  line-height:1;text-align:center;margin-bottom:4px;
+  background:linear-gradient(135deg,#fff,var(--active-color));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tasbeeh-milestone{font-size:11px;text-align:center;color:var(--muted);margin-bottom:14px;min-height:16px}
+.tasbeeh-preset-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.tasbeeh-preset{padding:4px 11px;border-radius:99px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);font-size:10.5px;font-family:'Hind Siliguri',sans-serif;
+  cursor:pointer;transition:all var(--t-fast)}
+.tasbeeh-preset.done{background:var(--active-soft);border-color:var(--active-color);color:var(--active-color)}
+.tasbeeh-reset-full{width:100%;padding:8px;border-radius:var(--r-sm);border:1px solid var(--border);
+  background:var(--surface);color:var(--muted);font-family:'Hind Siliguri',sans-serif;
+  font-size:12px;cursor:pointer;transition:all var(--t-fast)}
+.tasbeeh-reset-full:hover{border-color:var(--border2);color:var(--text)}
+
+/* ===================== FEEL BETTER LOOP ===================== */
+.feel-better-wrap{margin-top:20px;padding:18px 20px;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--r-lg);
+  animation:panelReveal 0.45s var(--t-slow) both}
+.feel-better-q{font-size:14px;color:var(--text2);margin-bottom:12px;line-height:1.7}
+.feel-better-btns{display:flex;gap:8px;flex-wrap:wrap}
+.feel-better-yes{padding:8px 18px;border-radius:99px;border:1px solid var(--active-color);
+  background:var(--active-soft);color:var(--active-color);font-family:'Hind Siliguri',sans-serif;
+  font-size:12.5px;cursor:pointer;transition:all var(--t-fast)}
+.feel-better-yes:hover{background:var(--active-color);color:#fff}
+.feel-better-no{padding:8px 18px;border-radius:99px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);font-family:'Hind Siliguri',sans-serif;
+  font-size:12.5px;cursor:pointer;transition:all var(--t-fast)}
+.feel-better-no:hover{border-color:var(--border2);color:var(--text)}
+.feel-better-msg{font-size:14px;color:var(--text);line-height:1.8;padding:14px 16px;
+  background:var(--active-soft);border-radius:var(--r-md);border-left:2px solid var(--active-color);
+  animation:panelReveal 0.4s var(--t-slow) both}
+
+/* ===================== AYAH INSIGHT ===================== */
+.ayah-insight{font-size:12px;color:var(--muted);line-height:1.7;margin-top:10px;
+  padding:10px 14px;background:var(--surface);border-radius:var(--r-sm);
+  border-left:2px solid rgba(255,255,255,0.1);font-style:italic}
+
+/* ===================== MOOD CHECK MODAL ===================== */
+.mood-check-modal{position:fixed;inset:0;z-index:800;display:flex;align-items:flex-end;
+  justify-content:center;pointer-events:none;padding:0 0 32px}
+.mood-check-modal.show{pointer-events:all}
+.mood-check-backdrop{position:absolute;inset:0;background:rgba(7,7,15,0.5);
+  backdrop-filter:blur(4px);opacity:0;transition:opacity 0.4s ease;pointer-events:none}
+.mood-check-modal.show .mood-check-backdrop{opacity:1;pointer-events:all}
+.mood-check-box{position:relative;background:var(--glass2);border:1px solid var(--border2);
+  border-radius:var(--r-xl);padding:28px 24px 24px;max-width:400px;width:calc(100% - 40px);
+  backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);
+  box-shadow:0 30px 80px rgba(0,0,0,0.6);
+  transform:translateY(60px);opacity:0;
+  transition:transform 0.55s var(--t-spring),opacity 0.4s ease}
+.mood-check-modal.show .mood-check-box{transform:translateY(0);opacity:1}
+.mood-check-title{font-size:15px;color:var(--text);margin-bottom:4px;font-weight:500}
+.mood-check-sub{font-size:12px;color:var(--muted);margin-bottom:20px}
+.mood-check-options{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+.mood-check-opt{display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:10px 12px;border-radius:var(--r-md);border:1px solid var(--border);
+  background:var(--surface);cursor:pointer;transition:all var(--t-fast);
+  font-family:'Hind Siliguri',sans-serif;min-width:62px}
+.mood-check-opt:hover{border-color:var(--border2);background:var(--surface2);transform:translateY(-2px)}
+.mood-check-opt span:first-child{font-size:22px}
+.mood-check-opt span:last-child{font-size:10px;color:var(--muted)}
+.mood-check-skip{display:block;text-align:center;background:none;border:none;
+  color:var(--muted);font-size:12px;font-family:'Hind Siliguri',sans-serif;
+  cursor:pointer;transition:color var(--t-fast)}
+.mood-check-skip:hover{color:var(--text)}
+
+/* ===================== FOOTER ===================== */
+.site-footer{position:relative;z-index:10;text-align:center;padding:24px 20px 32px;
+  border-top:1px solid var(--border)}
+.site-footer p{font-size:11px;color:var(--muted);letter-spacing:0.08em}
+.site-footer span{color:var(--active-color)}
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND LAYERS -->
+<canvas id="particle-canvas"></canvas>
+<div class="bg-mesh" id="bg-mesh"></div>
+<div class="ambient-blob blob-1" id="blob1"></div>
+<div class="ambient-blob blob-2" id="blob2"></div>
+<div class="ambient-blob blob-3" id="blob3"></div>
+
+<!-- NAV -->
+<nav class="nav-bar">
+  <div class="nav-logo">মনের কথা</div>
+  <div class="nav-right">
+    <button class="nav-icon-btn" id="pron-toggle-btn" title="উচ্চারণ দেখান/লুকান" onclick="togglePronunciation()">
+      <span id="pron-icon">ب</span>
+    </button>
+    <button class="nav-icon-btn" id="journal-nav-btn" title="জার্নাল" onclick="openOverlay('journal-overlay')">📓
+    </button>
+    <button class="nav-icon-btn" id="history-nav-btn" title="ইতিহাস" onclick="openOverlay('history-overlay')">🕐
+    </button>
+    <button class="nav-icon-btn" id="fav-nav-btn" title="প্রিয়" onclick="openOverlay('fav-overlay')">
+      ♡<span class="badge-count" id="fav-badge">0</span>
+    </button>
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="lang-bn" onclick="setLanguage('bn')">বাংলা</button>
+      <button class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header>
+  <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+  <div class="header-ornament">
+    <div class="ornament-line"></div>
+    <div class="ornament-diamond" id="ornament-diamond"></div>
+    <div class="ornament-line"></div>
+  </div>
+  <h1 class="site-title">মনের কথা</h1>
+  <p class="site-subtitle" id="site-subtitle-text">আপনার অনুভূতির জন্য কোরআনের আলো</p>
+</header>
+
+<!-- DAILY AYAH -->
+<div class="daily-ayah-bar">
+  <div class="daily-ayah-inner" id="daily-inner" onclick="toggleDailyAyah()">
+    <div class="daily-ayah-pulse">☀️</div>
+    <div style="flex:1;min-width:0">
+      <div class="daily-ayah-label" id="daily-label">আজকের আয়াত</div>
+      <div class="daily-ayah-text" id="daily-preview">লোড হচ্ছে<span class="loading-dots"></span></div>
+    </div>
+    <div class="daily-expand">▼</div>
+  </div>
+  <div class="daily-full" id="daily-full">
+    <div class="daily-full-ar" id="daily-ar"></div>
+    <div class="daily-full-pron" id="daily-pron"></div>
+    <div class="daily-full-bn" id="daily-bn"></div>
+    <div class="daily-full-ref" id="daily-ref"></div>
+    <div class="daily-full-actions">
+      <button class="action-btn" onclick="favoriteDailyAyah()">♡ <span data-bn="প্রিয়তে" data-en="Favorite">প্রিয়তে</span></button>
+      <button class="action-btn" onclick="reflectOnDaily()">🌿 <span data-bn="ধ্যান করুন" data-en="Reflect">ধ্যান করুন</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- MOOD PROMPT -->
+<div class="mood-prompt">
+  <h2 id="mood-prompt-h2">আজ আপনার মন কেমন?</h2>
+  <p id="mood-prompt-p">একটি মুড বেছে নিন</p>
+</div>
+
+<!-- MOOD GRID -->
+<div class="mood-grid" id="mood-grid"></div>
+
+<!-- CONTENT AREA -->
+<div class="content-area">
+  <div class="pron-toggle-bar" id="pron-toggle-bar" style="display:none">
+    <span class="pron-toggle-label" id="pron-label-text">বাংলা উচ্চারণ</span>
+    <div class="toggle-switch on" id="pron-main-toggle" onclick="togglePronunciation()">
+      <div class="toggle-knob"></div>
+    </div>
+  </div>
+  <!-- Mood ayah panel -->
+  <div class="content-panel active" id="panel-mood">
+    <div id="ayah-output"></div>
+  </div>
+  <!-- Istighfar panel -->
+  <div class="content-panel" id="panel-istighfar">
+    <div class="section-heading">ইস্তেগফার</div>
+    <p class="section-sub">ক্ষমা প্রার্থনার দোয়া সমূহ</p>
+    <div id="istighfar-content"></div>
+  </div>
+</div>
+
+<!-- ========== DAILY AMOL ========== -->
+<div class="da-wrap" id="da-wrap">
+  <div class="da-head">
+    <div class="da-head-left">
+      <span style="font-size:28px;line-height:1">🕌</span>
+      <div>
+        <div class="da-title">আজকের আমল</div>
+        <div class="da-sub">প্রতিটি আমল সম্পন্ন করুন — আল্লাহর সন্তুষ্টি অর্জন করুন</div>
+      </div>
+    </div>
+    <div class="da-badge" id="da-badge">০ / ৭ আমল সম্পন্ন</div>
+  </div>
+  <div class="da-bar-wrap"><div class="da-bar" id="da-bar"></div></div>
+  <div id="da-slot"></div>
+  <div class="da-finish" id="da-finish" style="display:none">
+    <div class="da-finish-glow"></div>
+    <span class="da-finish-moon">🌙</span>
+    <div class="da-finish-title">আজকের আমল সম্পূর্ণ</div>
+    <div class="da-finish-msg">আল্লাহ আপনার সকল আমল কবুল করুন। আমীন।</div>
+    <button class="da-restart" id="da-restart">↺ আবার শুরু করুন</button>
+  </div>
+</div>
+
+<!-- ========== OVERLAYS ========== -->
+
+<!-- FAVORITES OVERLAY -->
+<div class="overlay" id="fav-overlay">
+  <div class="overlay-header">
+    <div class="overlay-title">♡ <span data-bn="প্রিয় আয়াত" data-en="Favorites">প্রিয় আয়াত</span></div>
+    <button class="overlay-close" onclick="closeOverlay('fav-overlay')">✕</button>
+  </div>
+  <div class="overlay-body" id="fav-body"></div>
+</div>
+
+<!-- HISTORY OVERLAY -->
+<div class="overlay" id="history-overlay">
+  <div class="overlay-header">
+    <div class="overlay-title">🕐 <span data-bn="ইতিহাস" data-en="History">ইতিহাস</span></div>
+    <button class="overlay-close" onclick="closeOverlay('history-overlay')">✕</button>
+  </div>
+  <div class="overlay-body" id="history-body"></div>
+</div>
+
+<!-- JOURNAL OVERLAY -->
+<div class="overlay" id="journal-overlay">
+  <div class="overlay-header">
+    <div class="overlay-title">📓 <span data-bn="আমার জার্নাল" data-en="My Journal">আমার জার্নাল</span></div>
+    <button class="overlay-close" onclick="closeOverlay('journal-overlay')">✕</button>
+  </div>
+  <div class="overlay-body">
+    <div class="journal-form">
+      <div class="text-muted mb8" id="journal-context-label">বর্তমান মুড: —</div>
+      <textarea class="journal-textarea" id="journal-input" placeholder="আপনার মনের কথা লিখুন..."></textarea>
+      <div class="journal-form-footer">
+        <span class="text-muted" id="journal-ayah-ref-label"></span>
+        <button class="action-btn primary" onclick="saveJournalEntry()">💾 <span data-bn="সংরক্ষণ করুন" data-en="Save">সংরক্ষণ করুন</span></button>
+      </div>
+    </div>
+    <div id="journal-entries"></div>
+  </div>
+</div>
+
+<!-- REFLECTION OVERLAY -->
+<div class="reflection-overlay" id="reflection-overlay">
+  <button class="reflection-close" onclick="closeReflection()">✕</button>
+  <div class="breath-orb"></div>
+  <div class="breath-label" id="breath-label">শ্বাস নিন... ছাড়ুন...</div>
+  <div class="reflection-arabic" id="reflection-ar"></div>
+  <div class="reflection-pron" id="reflection-pron"></div>
+  <div class="reflection-meaning" id="reflection-meaning"></div>
+  <div class="reflection-prompt" id="reflection-prompt">এই মুহূর্তে আপনি কী অনুভব করছেন?</div>
+  <textarea class="reflection-textarea" id="reflection-textarea" placeholder="আপনার ভাবনা এখানে লিখুন..."></textarea>
+  <button class="reflection-save-btn" onclick="saveReflectionToJournal()">জার্নালে সংরক্ষণ করুন</button>
+</div>
+
+<!-- REMINDER POPUP -->
+<div class="reminder-popup" id="reminder-popup">
+  <div class="reminder-top">
+    <span class="reminder-title">🌙 <span data-bn="মনে করিয়ে দিচ্ছি" data-en="Reminder">মনে করিয়ে দিচ্ছি</span></span>
+    <button class="reminder-dismiss" onclick="dismissReminder()">✕</button>
+  </div>
+  <div class="reminder-body" id="reminder-body">মনে শান্তি দরকার? একটি আয়াত পড়ুন।</div>
+  <button class="reminder-cta" onclick="dismissReminder();selectMood('seeking')">আয়াত পড়ুন</button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- TASBEEH COUNTER FAB -->
+<div class="tasbeeh-fab" id="tasbeeh-fab">
+  <button class="tasbeeh-orb" id="tasbeeh-orb" onclick="tasbeehTap(event)" title="তাসবীহ গণনা">
+    <div class="tasbeeh-orb-inner">
+      <div class="tasbeeh-count-display" id="tasbeeh-fab-count">0</div>
+      <div class="tasbeeh-sub-label">তাসবীহ</div>
+    </div>
+    <div class="tasbeeh-ripple" id="tasbeeh-ripple"></div>
+  </button>
+  <button class="tasbeeh-reset-btn" onclick="toggleTasbeehPanel()">☰ বিস্তারিত</button>
+</div>
+
+<!-- TASBEEH PANEL -->
+<div class="tasbeeh-panel" id="tasbeeh-panel">
+  <div class="tasbeeh-panel-title">তাসবীহ কাউন্টার</div>
+  <div class="tasbeeh-big-num" id="tasbeeh-big-num">0</div>
+  <div class="tasbeeh-milestone" id="tasbeeh-milestone"></div>
+  <div class="tasbeeh-preset-row">
+    <button class="tasbeeh-preset" data-target="33" onclick="checkPreset(33)">৩৩</button>
+    <button class="tasbeeh-preset" data-target="99" onclick="checkPreset(99)">৯৯</button>
+    <button class="tasbeeh-preset" data-target="100" onclick="checkPreset(100)">১০০</button>
+  </div>
+  <button class="tasbeeh-reset-full" onclick="tasbeehReset()">↺ রিসেট করুন</button>
+</div>
+
+<!-- MOOD CHECK MODAL (30-sec) -->
+<div class="mood-check-modal" id="mood-check-modal">
+  <div class="mood-check-backdrop" onclick="closeMoodCheck()"></div>
+  <div class="mood-check-box">
+    <div class="mood-check-title">আজ আপনি কেমন আছেন?</div>
+    <div class="mood-check-sub">একটি বেছে নিন — আমরা সঠিক আয়াত খুঁজে দেব</div>
+    <div class="mood-check-options">
+      <button class="mood-check-opt" onclick="moodCheckSelect('sad')"><span>😔</span><span>দুঃখিত</span></button>
+      <button class="mood-check-opt" onclick="moodCheckSelect('anxious')"><span>😰</span><span>উদ্বিগ্ন</span></button>
+      <button class="mood-check-opt" onclick="moodCheckSelect('seeking')"><span>😌</span><span>শান্ত</span></button>
+      <button class="mood-check-opt" onclick="moodCheckSelect('angry')"><span>😠</span><span>রাগান্বিত</span></button>
+      <button class="mood-check-opt" onclick="moodCheckSelect('hopeless')"><span>🥺</span><span>হারিয়ে গেছি</span></button>
+    </div>
+    <button class="mood-check-skip" onclick="closeMoodCheck()">এড়িয়ে যান</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>Developed by <span>Iftekhar Ahmed Sourav</span></p>
+</footer>
+
+<script>
+/* ============================================================
+   MONER KATHA PREMIUM v2.0 — FULL FEATURE SET
+   ============================================================ */
+
+/* ============ STATE ============ */
+const STATE = {
+  currentMood: null,
+  currentAyah: null,
+  language: 'bn',
+  showPronunciation: true,
+  intensity: 'medium',
+  favorites: [],
+  history: [],
+  journal: [],
+  lastReminder: 0,
+  tasbeehCount: 0,
+  moodCheckShown: false,
+  lastShownAyahIndex: -1,
+};
+
+/* ============ DATA: MOODS ============ */
+const MOODS = [
+  {id:'sad',     emoji:'😢', bn:'দুঃখিত',   en:'Sad',       color:'--sad',      sub:'মন ভালো নেই'},
+  {id:'anxious', emoji:'😰', bn:'উদ্বিগ্ন',  en:'Anxious',   color:'--anxious',  sub:'চিন্তিত'},
+  {id:'lonely',  emoji:'🥺', bn:'একাকীত্ব', en:'Lonely',    color:'--lonely',   sub:'একা মনে হচ্ছে'},
+  {id:'grateful',emoji:'🤲', bn:'কৃতজ্ঞ',  en:'Grateful',  color:'--grateful', sub:'শুকরিয়া'},
+  {id:'happy',   emoji:'😊', bn:'আনন্দিত',  en:'Happy',     color:'--happy',    sub:'ভালো লাগছে'},
+  {id:'hopeless',emoji:'😞', bn:'হতাশ',     en:'Hopeless',  color:'--hopeless', sub:'আশাহীন'},
+  {id:'seeking', emoji:'🔍', bn:'সন্ধানী',  en:'Seeking',   color:'--seeking',  sub:'পথ খুঁজছি'},
+  {id:'angry',   emoji:'😤', bn:'রাগান্বিত', en:'Angry',    color:'--angry',    sub:'মন বিক্ষুব্ধ'},
+];
+
+/* ============ DATA: KEYWORD MAP ============ */
+const KEYWORD_MAP = {
+
+  /* ── 😢 SAD / দুঃখিত / মন ভালো নেই ─────────────────────────── */
+  sad: [
+    // English
+    'sad','sadness','depressed','depression','unhappy','upset','heartbroken','hurt',
+    'cry','crying','cried','tears','grief','grieve','grieving','sorrow','sorrowful',
+    'miserable','gloomy','down','low','blue','hopeless feeling','feel bad','feeling bad',
+    'not okay','not good','broken','pain','painful','ache','aching','lost hope',
+    'feeling sad','i am sad','i feel sad','feeling low','feeling down','feeling broken',
+    'feel alone','feel empty','empty inside','numb','nothing matters',
+    // Banglish
+    'dukho','dukhi','dukkho','mon kharap','mone kharap','koshto','kanna','kandchi',
+    'bytha','bitha','bhalobashi na','mon valo nei','valo nei','mon valo na',
+    'koshto lagche','boro koshto','onek koshto','mon bhenge geche','mon venge gese',
+    'kande','kaadchi','kante iche korche','betha lagche','monta kharap',
+    'amar koshto','khub koshto','mon niye koshto','ektu mon kharap','khub mon kharap',
+    // Bangla
+    'দুঃখ','দুঃখিত','দুখী','কষ্ট','মন খারাপ','কাঁদছি','কান্না','ব্যথা','বেদনা',
+    'বিষণ্ণ','বিষাদ','মর্মাহত','ব্যথিত','হৃদয় ভেঙে','মন ভেঙে','ভালো নেই',
+    'মন ভালো নেই','একদম ভালো নেই','ভালো লাগছে না','কিছুই ভালো লাগছে না',
+    'বুকে ব্যথা','বুক ভার','শূন্য লাগছে','কষ্টে আছি','অনেক কষ্ট','খুব কষ্ট',
+  ],
+
+  /* ── 😰 ANXIOUS / উদ্বিগ্ন / চিন্তিত ───────────────────────── */
+  anxious: [
+    // English
+    'anxious','anxiety','worried','worry','worrying','stress','stressed','stressful',
+    'tension','nervous','nervousness','panic','panicking','scared','fear','afraid',
+    'uneasy','restless','overthinking','overthink','cant sleep','cannot sleep',
+    'racing thoughts','mind racing','on edge','freaking out','overwhelmed','overwhelm',
+    'dread','dreading','apprehensive','tense','jittery','shaking','breathless',
+    'feeling anxious','i am worried','feeling nervous','so stressed','very stressed',
+    // Banglish
+    'chinta','chintita','chintito','dushchinta','tenshon','tension lagche',
+    'bhoy','bhoy lagche','dor lagche','ghobra','ghobrano','panic korchi',
+    'onek chinta','khub chinta','chinta hocche','chinta lagche','mon chinta',
+    'mathay chinta','rat ghum hoy na','ghum ashe na','onek stress',
+    'tension hocche','heart beshi tez','matha ghurachhe','gondogol lagche',
+    'ki hobe','ki korbo','ki hocche','bujhte parchi na','boro chinta',
+    // Bangla
+    'চিন্তা','উদ্বেগ','উদ্বিগ্ন','চিন্তিত','দুশ্চিন্তা','ভয়','আতঙ্ক','নার্ভাস',
+    'টেনশন','অস্থির','অশান্ত','ঘাবড়ানো','ভয় লাগছে','ডর লাগছে','প্যানিক',
+    'অনেক চিন্তা','খুব চিন্তা','ঘুম হচ্ছে না','মাথায় চিন্তা','মন অস্থির',
+    'চিন্তা হচ্ছে','মন শান্ত নেই','অনেক টেনশন','বুক ধড়ফড়','শ্বাস নিতে পারছি না',
+  ],
+
+  /* ── 🥺 LONELY / একাকীত্ব / একা মনে হচ্ছে ─────────────────── */
+  lonely: [
+    // English
+    'lonely','loneliness','alone','all alone','isolated','isolation','abandoned',
+    'left out','no one','nobody','nobody cares','no friends','friendless',
+    'feel alone','feeling alone','so alone','very alone','completely alone',
+    'missing someone','miss someone','no company','by myself','on my own',
+    'unloved','unwanted','invisible','forgotten','left behind','excluded',
+    // Banglish
+    'eka','ekla','ekaki','ekakitta','nihsongo','nisongo',
+    'bondhu nei','kotha bolte pari na','keu nei','keu bujhe na','keu nai',
+    'harie gesi','hariye gechi','ekdom eka','onek eka','eka lagche',
+    'mone hocche eka','keu ache na','kotha bolar nei','manush nei',
+    'nishongo lagche','shunno lagche','kono bondhu nei','keu care korena',
+    // Bangla
+    'একা','একাকী','একাকীত্ব','নিঃসঙ্গ','নিঃসঙ্গতা','বিচ্ছিন্ন','বন্ধু নেই',
+    'একা মনে হচ্ছে','একা লাগছে','কেউ নেই','কেউ বোঝে না','কেউ নাই',
+    'হারিয়ে গেছি','কথা বলার নেই','মানুষ নেই','একদম একা','অনেক একা',
+    'সঙ্গী নেই','কাউকে পাচ্ছি না','শূন্য মনে হচ্ছে','মিস করছি',
+  ],
+
+  /* ── 🤲 GRATEFUL / কৃতজ্ঞ / শুকরিয়া ───────────────────────── */
+  grateful: [
+    // English
+    'grateful','gratitude','thankful','thank','blessed','blessing','appreciate',
+    'appreciate life','alhamdulillah','praise','content','fulfilled','fortunate',
+    'lucky','happy with','satisfied','abundance','good things','life is good',
+    // Banglish
+    'shukria','kotoggo','alhamdulillah','dhonnobad','allah ke dhanno','boro din',
+    'valo khabar','valo hoise','khub valo','allah shukar','shukor','dhonyo',
+    // Bangla
+    'কৃতজ্ঞ','কৃতজ্ঞতা','শুকরিয়া','ধন্যবাদ','আলহামদুলিল্লাহ','ধন্য',
+    'শোকর','আল্লাহর শোকর','আল্লাহকে ধন্যবাদ','ভালো আছি','সুখী',
+    'নেয়ামত','আশীর্বাদ','প্রশংসা',
+  ],
+
+  /* ── 😊 HAPPY / আনন্দিত / ভালো লাগছে ───────────────────────── */
+  happy: [
+    // English
+    'happy','happiness','joy','joyful','joyous','excited','excited about','great',
+    'wonderful','fantastic','amazing','awesome','cheerful','smile','smiling',
+    'elated','ecstatic','delighted','pleased','good mood','feeling good',
+    'feeling great','feeling happy','so happy','very happy','extremely happy',
+    // Banglish
+    'khushi','anondo','valo lagche','bhalo lagche','moja','maja','onek valo',
+    'khub valo','mon valo','mon bhalo','valo achi','khub khushi','anondo lagche',
+    'haschi','hashchi','herphut','jolosh','hashi','onek anondo','moja hocche',
+    // Bangla
+    'খুশি','আনন্দ','আনন্দিত','ভালো লাগছে','হাসি','সুখী','মজা','দারুণ',
+    'অসাধারণ','চমৎকার','ভালো আছি','মন ভালো','খুব ভালো','অনেক ভালো',
+    'প্রফুল্ল','উৎফুল্ল','হাসছি','মনটা ভালো','আনন্দে আছি',
+  ],
+
+  /* ── 😞 HOPELESS / হতাশ / আশাহীন ───────────────────────────── */
+  hopeless: [
+    // English
+    'hopeless','hopelessness','despair','despairing','helpless','helplessness',
+    'worthless','useless','failure','failed','failing','no point','pointless',
+    'no use','give up','giving up','cant go on','cannot continue','no future',
+    'nothing works','everything fails','i quit','done trying','no hope',
+    'losing faith','lost faith','broken inside','shattered','rock bottom',
+    // Banglish
+    'hotash','hotasho','ashaheen','nirupay','nirasha','asha nei','hatal',
+    'hare gechi','haar menechi','kichu hobe na','kono kaj nei','laav nei',
+    'chesta chhari diyechi','aro parbo na','ar thakte parchi na','sob shesh',
+    'jibon niye asha nei','kono vobishot nei','baje lage','nijer kache baje',
+    // Bangla
+    'হতাশ','হতাশা','আশাহীন','নিরুপায়','নিরাশ','ব্যর্থ','অসফল','মরিয়া',
+    'আশা নেই','হার মেনেছি','ছেড়ে দিয়েছি','কিছু হবে না','সব শেষ',
+    'বাঁচতে চাই না','আর পারছি না','কোনো ভবিষ্যৎ নেই','ভেঙে পড়েছি',
+    'ভেঙে গেছি','নিচে পড়ে আছি',
+  ],
+
+  /* ── 🔍 SEEKING / সন্ধানী / পথ খুঁজছি ──────────────────────── */
+  seeking: [
+    // English
+    'seeking','searching','guidance','direction','lost','confused','confusion',
+    'no direction','purpose','meaning','what is my purpose','why am i here',
+    'dont know','do not know','unsure','uncertain','which way','right path',
+    'need guidance','looking for','trying to find','questioning','questioning life',
+    // Banglish
+    'khujchi','path khujchi','heda','dik nirdeshona','bujhte parchi na',
+    'ki korbo','ki hobe','kothay jabo','confused','bhranto','rastay hariye gesi',
+    'jibon niye proshno','motlob khujchi','lakkho nei','uddeshyo nei',
+    'sothik path','allah er poth','hidayat chai','valo hote chai',
+    // Bangla
+    'পথ','সন্ধানী','পথ খুঁজছি','হেদায়েত','দিকনির্দেশনা','বিভ্রান্ত','বিভ্রান্তি',
+    'হারিয়ে গেছি','বুঝতে পারছি না','কী করব','কোথায় যাব','সঠিক পথ',
+    'আল্লাহর পথ','হেদায়েত চাই','ভালো হতে চাই','জীবনের মানে','উদ্দেশ্য',
+    'লক্ষ্য নেই','দিকহারা','পথহারা','গাইডেন্স','প্রশ্ন','খুঁজছি',
+  ],
+
+  /* ── 😤 ANGRY / রাগান্বিত / মন বিক্ষুব্ধ ───────────────────── */
+  angry: [
+    // English
+    'angry','anger','mad','furious','rage','raging','frustrated','frustration',
+    'irritated','irritation','annoyed','annoying','agitated','livid','outraged',
+    'hate','hatred','can not stand','cannot stand','fed up','sick of',
+    'so angry','very angry','extremely angry','boiling','fuming','infuriated',
+    'feel like screaming','want to scream','losing my temper','lost my temper',
+    // Banglish
+    'rag','rag lagche','rege gechi','onek rag','khub rag','birokto','biroktikar',
+    'rodhe','khob','chechi','matha goromo','matha garam','gaye rakte uthe',
+    'jon niye rag','sob niye birokto','niye birokto','jala lagche','kharap lagche',
+    'shoja lagche na','mone hocche chillai','chitkaar korte iche korche',
+    'rog','frustration lagche','irritate lagche','tolerate korte parchi na',
+    // Bangla
+    'রাগ','রাগান্বিত','রেগে গেছি','ক্ষোভ','বিরক্ত','বিরক্তিকর','মেজাজ',
+    'রেগে','ক্রোধ','মন বিক্ষুব্ধ','বিক্ষুব্ধ','মাথা গরম','জ্বালা লাগছে',
+    'সহ্য হচ্ছে না','রাগ লাগছে','অনেক রাগ','খুব রাগ','গায়ে রক্ত উঠছে',
+    'চিৎকার করতে ইচ্ছে','মাথা ঠিক নেই','রাগে কাঁপছি',
+  ],
+
+  /* ── 😌 CALM (mapped to seeking/grateful in UI) ──────────────── */
+  calm: [
+    'calm','peaceful','peace','serene','relaxed','tranquil','at ease','stillness',
+    'mindful','centered','grounded','quiet mind','inner peace',
+    'shanto','shantite achi','shantite','man shanto','mon shanto',
+    'shanti lagche','valo achi','sukhe achi','bhalo achi',
+    'শান্ত','শান্তি','শান্তিতে আছি','মন শান্ত','ভালো আছি','সুখে আছি',
+    'আমি ভালো','প্রশান্তি','নিরিবিলি','স্থির','স্থিতিশীল',
+  ],
+
+};
+
+/* ============ DATA: AYAHS ============ */
+const AYAH_DB = {
+  sad: [
+    {ar:'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ',
+     pron:'আলা বিযিকরিল্লাহি তাতমাইন্নুল কুলুব।',
+     bn:'জেনে রাখো, আল্লাহর স্মরণেই হৃদয় প্রশান্তি পায়।',
+     en:'Verily, in the remembrance of Allah do hearts find rest.',
+     ref:'সূরা রা\'দ: ২৮',ref_en:'Ar-Ra\'d 13:28',
+     note_bn:'দুঃখের সময় আল্লাহর জিকির করুন — এটি হৃদয়কে শান্ত করে।',
+     note_en:'In times of sadness, remember Allah — it soothes the heart.'},
+    {ar:'وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ',
+     pron:'ওয়ামাঁই ইয়াতাওয়াক্কাল আলাল্লাহি ফাহুওয়া হাসবুহু।',
+     bn:'যে আল্লাহর উপর ভরসা রাখে, তার জন্য আল্লাহই যথেষ্ট।',
+     en:'Whoever relies upon Allah, then He is sufficient for him.',
+     ref:'সূরা তালাক: ৩',ref_en:'At-Talaq 65:3',
+     note_bn:'আল্লাহই সর্বোত্তম ভরসার স্থান।',
+     note_en:'Allah is the best of those to be relied upon.'},
+    {ar:'إِنَّ مَعَ الْعُسْرِ يُسْرًا',
+     pron:'ইন্না মায়াল উসরি ইউসরা।',
+     bn:'নিশ্চয়ই কষ্টের সাথেই রয়েছে স্বস্তি।',
+     en:'Indeed, with hardship comes ease.',
+     ref:'সূরা ইনশিরাহ: ৬',ref_en:'Ash-Sharh 94:6',
+     note_bn:'প্রতিটি কঠিন মুহূর্তের পরে আল্লাহ সহজ করে দেবেন।',
+     note_en:'After every difficulty, Allah brings ease.'},
+  ],
+  anxious: [
+    {ar:'حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ',
+     pron:'হাসবুনাল্লাহু ওয়া নিয়মাল ওয়াকীল।',
+     bn:'আল্লাহই আমাদের জন্য যথেষ্ট এবং তিনি কত উত্তম কর্মবিধায়ক।',
+     en:'Allah is sufficient for us, and He is the best guardian.',
+     ref:'সূরা আলে-ইমরান: ১৭৩',ref_en:'Ali Imran 3:173',
+     note_bn:'এই দোয়া পড়লে উদ্বেগ কমে যায়। রাসুলুল্লাহ (সা) কঠিন সময়ে এটি পড়তেন।',
+     note_en:'This dua was recited by the Prophet ﷺ in times of great anxiety.'},
+    {ar:'لَا تَحْزَنْ إِنَّ اللَّهَ مَعَنَا',
+     pron:'লা তাহযান ইন্নাল্লাহা মায়ানা।',
+     bn:'দুশ্চিন্তা করো না, আল্লাহ আমাদের সাথে আছেন।',
+     en:'Do not grieve, indeed Allah is with us.',
+     ref:'সূরা তাওবা: ৪০',ref_en:'At-Tawbah 9:40',
+     note_bn:'আল্লাহ সর্বদা আপনার সাথে আছেন।',
+     note_en:'Allah is always with you, even in your most anxious moments.'},
+  ],
+  lonely: [
+    {ar:'وَهُوَ مَعَكُمْ أَيْنَ مَا كُنتُمْ',
+     pron:'ওয়াহুওয়া মায়াকুম আইনামা কুনতুম।',
+     bn:'তিনি তোমাদের সাথে আছেন তোমরা যেখানেই থাকো।',
+     en:'And He is with you wherever you are.',
+     ref:'সূরা হাদীদ: ৪',ref_en:'Al-Hadid 57:4',
+     note_bn:'আপনি কখনো একা নন — আল্লাহ সর্বদা আপনার সাথে।',
+     note_en:'You are never truly alone — Allah is always with you.'},
+    {ar:'وَإِذَا سَأَلَكَ عِبَادِي عَنِّي فَإِنِّي قَرِيبٌ',
+     pron:'ওয়া ইযা সাআলাকা ইবাদী আন্নী ফাইন্নী ক্বারীব।',
+     bn:'আমার বান্দারা যখন আমার সম্পর্কে তোমাকে জিজ্ঞেস করে, তুমি বলো আমি কাছেই আছি।',
+     en:'When My servants ask about Me, I am near.',
+     ref:'সূরা বাকারা: ১৮৬',ref_en:'Al-Baqarah 2:186',
+     note_bn:'আল্লাহ আপনার থেকে কখনো দূরে নেই। তিনি আপনার প্রতিটি ডাক শোনেন।',
+     note_en:'Allah hears your every call. He is closer than you think.'},
+  ],
+  grateful: [
+    {ar:'لَئِن شَكَرْتُمْ لَأَزِيدَنَّكُمْ',
+     pron:'লাইন শাকারতুম লাআযীদান্নাকুম।',
+     bn:'যদি তোমরা কৃতজ্ঞ হও, তাহলে আমি অবশ্যই তোমাদের আরো বেশি দেব।',
+     en:'If you are grateful, I will surely increase you in favor.',
+     ref:'সূরা ইবরাহীম: ৭',ref_en:'Ibrahim 14:7',
+     note_bn:'কৃতজ্ঞতা আল্লাহর নিয়ামত আরো বাড়িয়ে দেয়।',
+     note_en:'Gratitude multiplies the blessings of Allah.'},
+    {ar:'فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ',
+     pron:'ফাযকুরূনী আযকুরকুম ওয়াশকুরূ লী ওয়ালা তাকফুরূন।',
+     bn:'তোমরা আমাকে স্মরণ করো, আমি তোমাদের স্মরণ করব। আমার প্রতি কৃতজ্ঞ থাকো এবং অকৃতজ্ঞ হয়ো না।',
+     en:'Remember Me, and I will remember you. Be grateful to Me and do not deny Me.',
+     ref:'সূরা বাকারা: ১৫২',ref_en:'Al-Baqarah 2:152',
+     note_bn:'জিকির ও শোকর — দুটোই আল্লাহর রহমতের চাবিকাঠি।',
+     note_en:'Remembrance and gratitude are keys to Allah\'s mercy.'},
+  ],
+  happy: [
+    {ar:'وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ',
+     pron:'ওয়া আম্মা বিনিয়মাতি রব্বিকা ফাহাদ্দিস।',
+     bn:'আর তোমার প্রভুর নিয়ামতের কথা বর্ণনা করো।',
+     en:'And proclaim the blessing of your Lord.',
+     ref:'সূরা দুহা: ১১',ref_en:'Ad-Duha 93:11',
+     note_bn:'আনন্দের সময় আল্লাহর নিয়ামতের কথা বলুন এবং কৃতজ্ঞতা প্রকাশ করুন।',
+     note_en:'In times of joy, share the blessings of your Lord with gratitude.'},
+    {ar:'وَمَا بِكُم مِّن نِّعْمَةٍ فَمِنَ اللَّهِ',
+     pron:'ওয়ামা বিকুম মিন নিয়মাতিন ফামিনাল্লাহ।',
+     bn:'তোমাদের কাছে যত নিয়ামত আছে সব আল্লাহর কাছ থেকেই।',
+     en:'And whatever you have of favor, it is from Allah.',
+     ref:'সূরা নাহল: ৫৩',ref_en:'An-Nahl 16:53',
+     note_bn:'সকল আনন্দ ও সুখের উৎস আল্লাহ। তাঁর শোকর আদায় করুন।',
+     note_en:'All joy and happiness ultimately comes from Allah.'},
+  ],
+  hopeless: [
+    {ar:'لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ',
+     pron:'লা তাকনাতু মির রাহমাতিল্লাহ।',
+     bn:'আল্লাহর রহমত থেকে নিরাশ হয়ো না।',
+     en:'Do not despair of the mercy of Allah.',
+     ref:'সূরা যুমার: ৫৩',ref_en:'Az-Zumar 39:53',
+     note_bn:'আল্লাহর রহমত অসীম। যতই পাপ করো না কেন, তওবা করলে তিনি মাফ করেন।',
+     note_en:'Allah\'s mercy is boundless. No matter what, He forgives those who repent.'},
+    {ar:'إِنَّهُ لَا يَيْأَسُ مِن رَّوْحِ اللَّهِ إِلَّا الْقَوْمُ الْكَافِرُونَ',
+     pron:'ইন্নাহু লা ইয়াইয়াসু মির রাওহিল্লাহি ইল্লাল কাওমুল কাফিরূন।',
+     bn:'আল্লাহর রহমত থেকে কেবল কাফের সম্প্রদায়ই নিরাশ হয়।',
+     en:'Indeed, no one despairs of relief from Allah except the disbelieving people.',
+     ref:'সূরা ইউসুফ: ৮৭',ref_en:'Yusuf 12:87',
+     note_bn:'ঈমানদার কখনো হতাশ হয় না। আল্লাহর উপর আস্থা রাখুন।',
+     note_en:'A believer never loses hope. Keep trust in Allah.'},
+  ],
+  seeking: [
+    {ar:'اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ',
+     pron:'ইহদিনাস সিরাতাল মুস্তাক্বীম।',
+     bn:'আমাদেরকে সরল পথ দেখাও।',
+     en:'Guide us to the straight path.',
+     ref:'সূরা ফাতিহা: ৬',ref_en:'Al-Fatiha 1:6',
+     note_bn:'এই দোয়া প্রতিদিন ১৭ বার পড়া হয় নামাজে। সঠিক পথের জন্য আল্লাহর কাছে চান।',
+     note_en:'This dua is read 17 times daily in prayer. Ask Allah for guidance.'},
+    {ar:'وَمَن يُطِعِ اللَّهَ وَرَسُولَهُ فَقَدْ فَازَ فَوْزًا عَظِيمًا',
+     pron:'ওয়ামাঁই ইউতিয়িল্লাহা ওয়া রাসূলাহু ফাকাদ ফাযা ফাওযান আযীমা।',
+     bn:'যে আল্লাহ ও তাঁর রাসুলের আনুগত্য করে, সে মহান সাফল্য লাভ করে।',
+     en:'Whoever obeys Allah and His Messenger has truly succeeded.',
+     ref:'সূরা আহযাব: ৭১',ref_en:'Al-Ahzab 33:71',
+     note_bn:'আল্লাহ ও রাসুলের পথই সঠিক পথ।',
+     note_en:'The path of Allah and His Messenger is the straight path.'},
+  ],
+  angry: [
+    {ar:'وَالْكَاظِمِينَ الْغَيْظَ وَالْعَافِينَ عَنِ النَّاسِ',
+     pron:'ওয়াল কাযিমীনাল গাইযা ওয়াল আফীনা আনিন নাস।',
+     bn:'যারা রাগ সংবরণ করে এবং মানুষকে ক্ষমা করে।',
+     en:'Those who restrain anger and pardon people.',
+     ref:'সূরা আলে-ইমরান: ১৩৪',ref_en:'Ali Imran 3:134',
+     note_bn:'রাগ সংবরণ করা সবচেয়ে বড় শক্তির পরিচয়। আল্লাহ এই গুণটিকে পছন্দ করেন।',
+     note_en:'Restraining anger is a sign of great strength. Allah loves this quality.'},
+    {ar:'خُذِ الْعَفْوَ وَأْمُرْ بِالْعُرْفِ وَأَعْرِضْ عَنِ الْجَاهِلِينَ',
+     pron:'খুযিল আফওয়া ওয়ামুর বিল উরফি ওয়া আরিয হ আনিল জাহিলীন।',
+     bn:'ক্ষমাকে অবলম্বন করো, ভালো কাজের নির্দেশ দাও, এবং মূর্খদের এড়িয়ে চলো।',
+     en:'Take forgiveness, enjoin what is good, and turn away from the ignorant.',
+     ref:'সূরা আরাফ: ১৯৯',ref_en:'Al-Araf 7:199',
+     note_bn:'মূর্খদের সাথে বিতর্কে না গিয়ে তাদের এড়িয়ে চলাই বুদ্ধিমানের কাজ।',
+     note_en:'Avoiding the ignorant is the wisest response to provocation.'},
+  ],
+};
+
+/* ============ DATA: DAILY AYAHS POOL ============ */
+const DAILY_POOL = [
+  {ar:'وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ',pron:'ওয়ালাসাওফা ইউতীকা রব্বুকা ফাতারদা।',bn:'শীঘ্রই তোমার পালনকর্তা তোমাকে এত কিছু দেবেন যে তুমি সন্তুষ্ট হয়ে যাবে।',en:'Your Lord will give to you, and you will be satisfied.',ref:'সূরা দুহা: ৫'},
+  {ar:'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا',pron:'ফাইন্না মায়াল উসরি ইউসরা।',bn:'নিশ্চয়ই কষ্টের সাথেই রয়েছে স্বস্তি।',en:'For indeed, with hardship will be ease.',ref:'সূরা ইনশিরাহ: ৫'},
+  {ar:'وَنَحْنُ أَقْرَبُ إِلَيْهِ مِنْ حَبْلِ الْوَرِيدِ',pron:'ওয়ানাহনু আকরাবু ইলাইহি মিন হাবলিল ওয়ারীদ।',bn:'আমরা তার জুগুলার শিরার চেয়েও তার কাছাকাছি।',en:'We are nearer to him than his jugular vein.',ref:'সূরা ক্বাফ: ১৬'},
+  {ar:'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ',pron:'ইন্নাল্লাহা মায়াস সাবিরীন।',bn:'আল্লাহ ধৈর্যশীলদের সাথে আছেন।',en:'Indeed, Allah is with the patient.',ref:'সূরা বাকারা: ১৫৩'},
+  {ar:'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً',pron:'রাব্বানা আতিনা ফিদ্দুনিয়া হাসানাতাঁও ওয়াফিল আখিরাতি হাসানাহ।',bn:'হে আমাদের পালনকর্তা! আমাদেরকে দুনিয়া ও আখিরাত উভয়েই কল্যাণ দাও।',en:'Our Lord, give us good in this world and good in the Hereafter.',ref:'সূরা বাকারা: ২০১'},
+  {ar:'وَاللَّهُ يُحِبُّ الصَّابِرِينَ',pron:'ওয়াল্লাহু ইউহিব্বুস সাবিরীন।',bn:'এবং আল্লাহ ধৈর্যশীলদের ভালোবাসেন।',en:'And Allah loves the steadfast.',ref:'সূরা আলে-ইমরান: ১৪৬'},
+  {ar:'قُلْ هُوَ اللَّهُ أَحَدٌ',pron:'কুল হুওয়াল্লাহু আহাদ।',bn:'বলুন, তিনি আল্লাহ, একক।',en:'Say: He is Allah, the One.',ref:'সূরা ইখলাস: ১'},
+];
+
+/* ============ DATA: ISTIGHFAR ============ */
+const ISTIGHFAR_DATA = [
+  {label:'দোয়া-১', sub:'সবচেয়ে ছোট ইস্তেগফার',
+   ar:'أَسْتَغْفِرُ اللهَ',pron:'আস্তাগফিরুল্লা-হ।',
+   meaning_bn:'আমি আল্লাহর ক্ষমা প্রার্থনা করছি।',
+   meaning_en:'I seek forgiveness from Allah.',
+   hadith:'প্রতি ওয়াক্তের ফরয সালাতে সালাম ফিরানোর পর রাসুলুল্লাহ (সাঃ) এই দোয়া ৩ বার পড়তেন। এছাড়াও সারাক্ষণ টয়লেট-বাথরুম ছাড়া এই ইস্তেগফারটি পড়ে জিহবা ভিজিয়ে রাখুন।',
+   ref:'মিশকাত-৯৬১'},
+  {label:'দোয়া-২', sub:'তওবাসহ ইস্তেগফার',
+   ar:'أَسْتَغْفِرُ اللهَ وَأَتُوبُ إِلَيْهِ',pron:'আস্তাগফিরুল্লা-হা ওয়া আতূবু ইলাইহি।',
+   meaning_bn:'আমি আল্লাহর ক্ষমা প্রার্থনা করছি ও তাঁর দিকে ফিরে আসছি।',
+   meaning_en:'I seek forgiveness from Allah and turn to Him in repentance.',
+   hadith:'রাসুলুল্লাহ (সাঃ) প্রতিদিন ৭০ বারের অধিক তাওবা ও ইসতিগফার করতেন।',
+   ref:'বুখারী-৬৩০৭'},
+  {label:'দোয়া-৩', sub:'পূর্ণ ইস্তেগফার',
+   ar:'أَسْتَغْفِرُ اللَّهَ الَّذِي لاَ إِلَهَ إِلاَّ هُوَ الْحَىُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ',
+   pron:'আস্তাগফিরুল্লা-হাল্লাযী লা ইলা-হা ইল্লা হুওয়াল হাইয়্যুল কইয়্যূম ওয়া আতূবু ইলায়হি।',
+   meaning_bn:'আমি আল্লাহর কাছে ক্ষমা চাই, তিনি ছাড়া প্রকৃতপক্ষে কোন মাবুদ নেই, তিনি চিরঞ্জীব, চিরস্থায়ী এবং তাঁর কাছে তাওবা করি।',
+   meaning_en:'I seek forgiveness from Allah, besides Whom there is none worthy of worship, the Ever-Living, the Self-Subsisting, and I repent to Him.',
+   hadith:'এই দোয়া পড়লে আল্লাহ তাকে ক্ষমা করে দিবেন — যদিও সে যুদ্ধক্ষেত্র হতে পলায়নকারী হয়।',
+   ref:'আবু দাউদ-১৫১৭, তিরমিযী-৩৫৭৭'},
+  {label:'দোয়া-৪', sub:'রাব্বিগফির',
+   ar:'رَبِّ اغْفِرْ لِيْ وَتُبْ عَلَيَّ إِنَّكَ التَّوَّابُ الرَّحِيْمُ',
+   pron:'রাব্বিগ ফিরলী, ওয়া তুব আলাইয়্যা, ইন্নাকা আনতাত তাওয়া-বুর রাহীম।',
+   meaning_bn:'হে আমার প্রভু, আপনি আমাকে ক্ষমা করুন এবং আমার তাওবা কবুল করুন। নিশ্চয় আপনি মহান তাওবা কবুলকারী করুণাময়।',
+   meaning_en:'My Lord, forgive me and accept my repentance. Indeed You are the Accepting of Repentance, the Merciful.',
+   hadith:'রাসুলুল্লাহ (সাঃ) এক বৈঠকে ১০০ বার পড়েছেন।',
+   ref:'আবু দাউদ, ইবনে মাজাহ'},
+  {label:'দোয়া-৫', sub:'সাইয়্যিদুল ইস্তেগফার',
+   ar:'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
+   pron:'আল্লাহুম্মা আনতা রব্বী লা-ইলাহা ইল্লা আনতা খালাক্কতানী ওয়া আনা আবদুকা ওয়া আনা আলা আহদিকা ওয়া ওয়াদিকা মাসতাতা\'তু আউযু বিকা মিন শাররি মা সানা\'তু আবূউ লাকা বিনিয়মাতিকা আলাইয়্যা ওয়া আবূউ লাকা বিযান্বী ফাগফিরলী ফাইন্নাহু লা ইয়াগফিরুয যুনূবা ইল্লা আনতা।',
+   meaning_bn:'হে আল্লাহ, তুমিই আমার প্রতিপালক, তুমি ছাড়া কোনো ইলাহ নেই। তুমি আমাকে সৃষ্টি করেছ এবং আমি তোমার বান্দা। আমি যথাসাধ্য তোমার অঙ্গীকার ও প্রতিশ্রুতিতে আছি। আমি যা করেছি তার অনিষ্ট থেকে তোমার আশ্রয় চাই। আমার প্রতি তোমার নিয়ামতের স্বীকৃতি দিচ্ছি এবং আমার পাপও স্বীকার করছি। সুতরাং আমাকে ক্ষমা করো, কারণ তুমি ছাড়া পাপ ক্ষমা করার কেউ নেই।',
+   meaning_en:'O Allah, You are my Lord. There is no deity except You. You created me and I am Your servant, and I am faithful to Your covenant and promise as much as I can. I seek refuge in You from the evil of what I have done. I acknowledge Your blessing upon me and I acknowledge my sin, so forgive me, for none forgives sins except You.',
+   hadith:'যে ব্যক্তি দৃঢ় বিশ্বাসের সাথে সন্ধ্যায় এই দোয়া পাঠ করে সে রাতে মারা গেলে জান্নাতবাসী হবে। যে সকালে পড়ে সেদিন মারা গেলে জান্নাতবাসী হবে।',
+   ref:'বুখারী-৬৩০৬'},
+];
+
+/* ============ INIT ============ */
+function init() {
+  loadState();
+  buildMoodGrid();
+  buildDailyAyah();
+  buildIstighfarContent();
+  renderFavBadge();
+  applyLanguage();
+  applyPronunciation();
+  scheduleReminder();
+  initParticles();
+  initTasbeeh();
+  scheduleMoodCheck();
+}
+
+/* ============ LOCALSTORAGE ============ */
+function saveState() {
+  try {
+    localStorage.setItem('mk_favorites', JSON.stringify(STATE.favorites));
+    localStorage.setItem('mk_history', JSON.stringify(STATE.history));
+    localStorage.setItem('mk_journal', JSON.stringify(STATE.journal));
+    localStorage.setItem('mk_language', STATE.language);
+    localStorage.setItem('mk_pron', STATE.showPronunciation ? '1' : '0');
+    localStorage.setItem('mk_lastReminder', STATE.lastReminder.toString());
+    localStorage.setItem('mk_tasbeeh', STATE.tasbeehCount.toString());
+  } catch(e) {}
+}
+function loadState() {
+  try {
+    const f = localStorage.getItem('mk_favorites'); if(f) STATE.favorites = JSON.parse(f);
+    const h = localStorage.getItem('mk_history'); if(h) STATE.history = JSON.parse(h);
+    const j = localStorage.getItem('mk_journal'); if(j) STATE.journal = JSON.parse(j);
+    const l = localStorage.getItem('mk_language'); if(l) STATE.language = l;
+    const p = localStorage.getItem('mk_pron'); if(p !== null) STATE.showPronunciation = p === '1';
+    const r = localStorage.getItem('mk_lastReminder'); if(r) STATE.lastReminder = parseInt(r);
+    const t = localStorage.getItem('mk_tasbeeh'); if(t) STATE.tasbeehCount = parseInt(t) || 0;
+  } catch(e) {}
+}
+
+/* ============ MOOD GRID ============ */
+function buildMoodGrid() {
+  const grid = document.getElementById('mood-grid');
+  grid.innerHTML = '';
+  MOODS.forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'mood-card';
+    card.dataset.mood = m.id;
+    const colorVal = getComputedStyle(document.documentElement).getPropertyValue(m.color).trim() || '#A97FE0';
+    card.innerHTML = `
+      <div class="card-glow" style="background:var(${m.color})"></div>
+      <div class="card-emoji">${m.emoji}</div>
+      <div class="card-name" style="color:var(${m.color})" data-bn="${m.bn}" data-en="${m.en}">${STATE.language==='bn'?m.bn:m.en}</div>
+      <div class="card-subtitle" data-bn="${m.sub}" data-en="${m.id}">${STATE.language==='bn'?m.sub:m.id}</div>`;
+    card.style.setProperty('--card-color', `var(${m.color})`);
+    card.addEventListener('click', () => selectMood(m.id));
+    // card hover color
+    card.addEventListener('mouseenter', () => { card.style.borderColor = `var(${m.color})`; card.style.boxShadow = `0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px var(${m.color})`; });
+    card.addEventListener('mouseleave', () => { if(STATE.currentMood !== m.id){ card.style.borderColor = ''; card.style.boxShadow = ''; }});
+    grid.appendChild(card);
+  });
+  // Istighfar button
+  const icard = document.createElement('div');
+  icard.className = 'mood-card istighfar-card';
+  icard.dataset.mood = 'istighfar';
+  icard.innerHTML = `
+    <div class="card-glow" style="background:var(--istighfar)"></div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+      <div class="card-emoji" style="margin:0">🤲</div>
+      <div>
+        <div class="card-name" style="color:var(--istighfar)">ইস্তেগফার</div>
+        <div class="card-subtitle">ক্ষমা প্রার্থনার দোয়া</div>
+      </div>
+    </div>`;
+  icard.addEventListener('click', () => selectIstighfar());
+  icard.addEventListener('mouseenter', () => { icard.style.borderColor = 'var(--istighfar)'; icard.style.boxShadow = '0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px var(--istighfar)'; });
+  icard.addEventListener('mouseleave', () => { if(STATE.currentMood !== 'istighfar'){ icard.style.borderColor = ''; icard.style.boxShadow = ''; }});
+  grid.appendChild(icard);
+}
+
+/* ============ SELECT MOOD ============ */
+function selectMood(moodId) {
+  STATE.currentMood = moodId;
+  // Update active card
+  document.querySelectorAll('.mood-card').forEach(c => {
+    c.classList.remove('active');
+    c.style.borderColor = '';
+    c.style.boxShadow = '';
+  });
+  const activeCard = document.querySelector(`[data-mood="${moodId}"]`);
+  if(activeCard){
+    activeCard.classList.add('active');
+    const mood = MOODS.find(m => m.id === moodId);
+    if(mood){
+      activeCard.style.borderColor = `var(${mood.color})`;
+      activeCard.style.boxShadow = `0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px var(${mood.color})`;
+      setThemeColor(mood.color);
+    }
+  }
+  // Show panels
+  document.getElementById('panel-mood').classList.add('active');
+  document.getElementById('panel-istighfar').classList.remove('active');
+  document.getElementById('pron-toggle-bar').style.display = 'flex';
+  // Render ayahs
+  renderAyahs(moodId);
+  // Add to history
+  const ayahs = AYAH_DB[moodId] || [];
+  if(ayahs.length > 0) {
+    addHistory(moodId, ayahs[0]);
+  }
+  STATE.currentAyah = ayahs[0] || null;
+  updateJournalContext();
+  scrollToContent();
+}
+
+/* ============ SELECT ISTIGHFAR ============ */
+function selectIstighfar() {
+  STATE.currentMood = 'istighfar';
+  document.querySelectorAll('.mood-card').forEach(c => { c.classList.remove('active'); c.style.borderColor=''; c.style.boxShadow=''; });
+  const icard = document.querySelector('[data-mood="istighfar"]');
+  if(icard){ icard.classList.add('active'); icard.style.borderColor='var(--istighfar)'; icard.style.boxShadow='0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px var(--istighfar)'; }
+  setThemeColor('--istighfar');
+  document.getElementById('panel-mood').classList.remove('active');
+  document.getElementById('panel-istighfar').classList.add('active');
+  document.getElementById('pron-toggle-bar').style.display = 'flex';
+  updateJournalContext();
+  scrollToContent();
+}
+
+/* ============ RENDER AYAHS ============ */
+function renderAyahs(moodId, startIndex) {
+  const container = document.getElementById('ayah-output');
+  const ayahs = AYAH_DB[moodId] || [];
+  if(ayahs.length === 0){ container.innerHTML = '<div class="text-muted" style="padding:40px;text-align:center">এই মুডের জন্য কোনো আয়াত পাওয়া যায়নি।</div>'; return; }
+  // Determine which ayah index to show (avoid repeat on "Not yet" click)
+  let idx = (startIndex !== undefined) ? startIndex : 0;
+  STATE.lastShownAyahIndex = idx;
+  container.innerHTML = '';
+  // Show single ayah or all depending on context
+  if(startIndex !== undefined) {
+    // "Not yet" path — show just this one
+    const a = ayahs[idx];
+    const card = createAyahCard(a, `mood-${moodId}-${idx}`, moodId);
+    container.appendChild(card);
+  } else {
+    ayahs.forEach((a, i) => {
+      const card = createAyahCard(a, `mood-${moodId}-${i}`, moodId);
+      container.appendChild(card);
+    });
+  }
+  // Append Feel Better block after last card
+  const fbWrap = document.createElement('div');
+  fbWrap.className = 'feel-better-wrap';
+  fbWrap.id = 'feel-better-wrap';
+  fbWrap.innerHTML = `
+    <div class="feel-better-q">🌸 ${STATE.language==='bn'?'আপনি কি একটু ভালো অনুভব করছেন?':'Do you feel a little better?'}</div>
+    <div class="feel-better-btns">
+      <button class="feel-better-yes" onclick="feelBetterYes()">✓ ${STATE.language==='bn'?'হ্যাঁ, ভালো লাগছে':'Yes, I feel better'}</button>
+      <button class="feel-better-no" onclick="feelBetterNo('${moodId}')">↻ ${STATE.language==='bn'?'এখনো না, আরেকটি আয়াত দেখান':'Not yet, show another'}</button>
+    </div>`;
+  container.appendChild(fbWrap);
+}
+
+function createAyahCard(a, id, moodId) {
+  const card = document.createElement('div');
+  card.className = 'ayah-card';
+  card.dataset.ayahId = id;
+  const isFav = isFavorite(id);
+  const textContent = STATE.language === 'bn' ? a.bn : a.en;
+  const refText = STATE.language === 'bn' ? a.ref : (a.ref_en || a.ref);
+  const noteText = STATE.language === 'bn' ? (a.note_bn||'') : (a.note_en||'');
+  const pronHidden = STATE.showPronunciation ? '' : ' hidden';
+  const pronMaxH = STATE.showPronunciation ? 'max-height:200px;opacity:1' : '';
+  // Ayah insight: short emotion-based 1-liner
+  const insightBn = a.insight_bn || a.note_bn || '';
+  const insightEn = a.insight_en || a.note_en || '';
+  const insightText = STATE.language === 'bn' ? insightBn : insightEn;
+  card.innerHTML = `
+    <div class="ayah-arabic">${a.ar}</div>
+    <div class="ayah-pronunciation${pronHidden}" style="${pronMaxH}">${a.pron}</div>
+    <div class="ayah-meaning">${textContent}</div>
+    ${insightText ? `<div class="ayah-insight">💡 ${insightText}</div>` : ''}
+    ${noteText && noteText !== insightText ? `<div class="context-note">${noteText}</div>` : ''}
+    <div class="ayah-meta">
+      <span class="ayah-ref">${refText}</span>
+      <div class="ayah-actions">
+        <button class="ayah-btn ${isFav?'fav-active':''}" onclick="toggleFavorite('${id}', this)" data-ayah-id="${id}">
+          ${isFav ? '★ প্রিয়' : '☆ প্রিয়'}
+        </button>
+        <button class="ayah-btn" onclick="openReflection('${id}')">🌿 ধ্যান</button>
+        <button class="ayah-btn" id="audio-btn-${id}" onclick="toggleAudio('${id}', this)">▶ শুনুন</button>
+        <button class="ayah-btn" onclick="copyAyah('${id}')">⎘ কপি</button>
+      </div>
+    </div>`;
+  card.dataset.ar = a.ar;
+  card.dataset.pron = a.pron;
+  card.dataset.bn = a.bn;
+  card.dataset.en = a.en || a.bn;
+  card.dataset.ref = a.ref;
+  card.dataset.mood = moodId || '';
+  return card;
+}
+
+/* ============ ISTIGHFAR CONTENT ============ */
+function buildIstighfarContent() {
+  const container = document.getElementById('istighfar-content');
+  container.innerHTML = `<div class="istighfar-intro">ইস্তেগফার করার বা ক্ষমা চাওয়ার দোয়া সমূহ। প্রতিটি দোয়া মনোযোগ সহকারে পড়ুন এবং আল্লাহর কাছে তওবা করুন।</div>`;
+  ISTIGHFAR_DATA.forEach((d, i) => {
+    const card = document.createElement('div');
+    card.className = 'istighfar-card';
+    const pronHidden = STATE.showPronunciation ? '' : ' hidden';
+    const meaningText = STATE.language === 'bn' ? d.meaning_bn : d.meaning_en;
+    const audioId = `istig-audio-${i}`;
+    card.innerHTML = `
+      <div class="istighfar-label">${d.label} — ${d.sub}</div>
+      <div class="istighfar-arabic">${d.ar}</div>
+      <div class="istighfar-pron${pronHidden}" style="${STATE.showPronunciation?'max-height:300px;opacity:1':''}">${d.pron}</div>
+      <div class="istighfar-meaning">${meaningText}</div>
+      <div class="istighfar-hadith">${d.hadith} <em style="color:var(--istighfar)">[${d.ref}]</em></div>
+      <div class="istighfar-actions">
+        <button class="ayah-btn" onclick="toggleFavorite('istig-${i}', this)">☆ প্রিয়</button>
+        <button class="ayah-btn" id="${audioId}" onclick="toggleIstighfarAudio(${i}, this)">▶ শুনুন</button>
+        <button class="ayah-btn" onclick="copyText('${d.ar} — ${d.pron}')">⎘ কপি</button>
+        <button class="ayah-btn" onclick="openReflectionRaw('${encodeURIComponent(d.ar)}','${encodeURIComponent(d.pron)}','${encodeURIComponent(meaningText)}')">🌿 ধ্যান</button>
+      </div>`;
+    card.dataset.ar = d.ar;
+    card.dataset.pron = d.pron;
+    card.dataset.bn = d.meaning_bn;
+    card.dataset.ref = d.ref;
+    card.dataset.mood = 'istighfar';
+    container.appendChild(card);
+  });
+}
+
+/* ============ DAILY AYAH ============ */
+function buildDailyAyah() {
+  const today = new Date();
+  const seed = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
+  const idx = seed % DAILY_POOL.length;
+  const da = DAILY_POOL[idx];
+  document.getElementById('daily-preview').textContent = da.bn.substring(0, 60) + (da.bn.length > 60 ? '…' : '');
+  document.getElementById('daily-ar').textContent = da.ar;
+  document.getElementById('daily-pron').textContent = da.pron;
+  document.getElementById('daily-bn').textContent = STATE.language === 'bn' ? da.bn : da.en;
+  document.getElementById('daily-ref').textContent = da.ref;
+  // Store for reflect
+  window._dailyAyah = da;
+  // Handle pronunciation display
+  const pronEl = document.getElementById('daily-pron');
+  pronEl.style.display = STATE.showPronunciation ? '' : 'none';
+}
+function toggleDailyAyah() {
+  const inner = document.getElementById('daily-inner');
+  const full = document.getElementById('daily-full');
+  inner.classList.toggle('expanded');
+  full.classList.toggle('open');
+}
+function favoriteDailyAyah() {
+  const da = window._dailyAyah; if(!da) return;
+  const id = 'daily-' + new Date().toDateString().replace(/\s/g,'');
+  if(!isFavorite(id)){
+    STATE.favorites.push({id, ar:da.ar, pron:da.pron, bn:da.bn, en:da.en||da.bn, ref:da.ref, mood:'daily', ts:Date.now()});
+    saveState(); renderFavBadge(); showToast('আজকের আয়াত প্রিয়তে যোগ হয়েছে ♡');
+  } else { showToast('ইতোমধ্যে প্রিয়তে আছে'); }
+}
+function reflectOnDaily() {
+  const da = window._dailyAyah; if(!da) return;
+  openReflectionRaw(encodeURIComponent(da.ar), encodeURIComponent(da.pron), encodeURIComponent(STATE.language==='bn'?da.bn:da.en));
+}
+
+/* ============ FAVORITES ============ */
+function isFavorite(id) { return STATE.favorites.some(f => f.id === id); }
+function toggleFavorite(id, btn) {
+  const idx = STATE.favorites.findIndex(f => f.id === id);
+  if(idx >= 0){
+    STATE.favorites.splice(idx, 1);
+    if(btn){ btn.classList.remove('fav-active'); btn.innerHTML = '☆ প্রিয়'; }
+    showToast('প্রিয় থেকে বাদ দেওয়া হয়েছে');
+  } else {
+    // Find ayah data from DOM
+    const card = document.querySelector(`[data-ayah-id="${id}"]`);
+    if(card){
+      STATE.favorites.push({id, ar:card.dataset.ar, pron:card.dataset.pron,
+        bn:card.dataset.bn, en:card.dataset.en||card.dataset.bn,
+        ref:card.dataset.ref, mood:card.dataset.mood, ts:Date.now()});
+      if(btn){ btn.classList.add('fav-active'); btn.innerHTML = '★ প্রিয়'; }
+      showToast('প্রিয়তে যোগ হয়েছে ♡');
+    } else if(id.startsWith('istig-')){
+      const iIdx = parseInt(id.replace('istig-',''));
+      const d = ISTIGHFAR_DATA[iIdx];
+      if(d){
+        STATE.favorites.push({id, ar:d.ar, pron:d.pron, bn:d.meaning_bn, en:d.meaning_en, ref:d.ref, mood:'istighfar', ts:Date.now()});
+        if(btn){ btn.classList.add('fav-active'); btn.innerHTML = '★ প্রিয়'; }
+        showToast('প্রিয়তে যোগ হয়েছে ♡');
+      }
+    }
+  }
+  saveState(); renderFavBadge();
+}
+function renderFavBadge() {
+  const badge = document.getElementById('fav-badge');
+  const n = STATE.favorites.length;
+  badge.textContent = n;
+  badge.classList.toggle('show', n > 0);
+  document.getElementById('fav-nav-btn').innerHTML = (n > 0 ? '★' : '♡') + `<span class="badge-count ${n>0?'show':''}" id="fav-badge">${n}</span>`;
+}
+function renderFavPanel() {
+  const body = document.getElementById('fav-body');
+  if(STATE.favorites.length === 0){
+    body.innerHTML = `<div class="fav-empty"><div class="fav-empty-icon">♡</div><p>এখনো কোনো আয়াত প্রিয়তে নেই।</p></div>`;
+    return;
+  }
+  body.innerHTML = '';
+  [...STATE.favorites].reverse().forEach((f, i) => {
+    const item = document.createElement('div');
+    item.className = 'fav-item';
+    const pronHidden = STATE.showPronunciation ? '' : ' hidden';
+    item.innerHTML = `
+      <div class="fav-item-arabic">${f.ar}</div>
+      <div class="fav-item-pron${pronHidden}">${f.pron}</div>
+      <div class="fav-item-meaning">${STATE.language==='bn'?f.bn:f.en}</div>
+      <div class="fav-item-meta">
+        <span class="fav-item-tag">${f.mood || '—'}</span>
+        <span class="fav-item-tag">${f.ref}</span>
+        <button class="fav-remove" onclick="removeFav('${f.id}', this)" title="বাদ দিন">🗑</button>
+      </div>`;
+    body.appendChild(item);
+  });
+}
+function removeFav(id, btn) {
+  const idx = STATE.favorites.findIndex(f => f.id === id);
+  if(idx >= 0){ STATE.favorites.splice(idx, 1); saveState(); renderFavBadge(); renderFavPanel(); showToast('প্রিয় থেকে বাদ দেওয়া হয়েছে'); }
+  // Sync btn in main content
+  const mainBtn = document.querySelector(`[data-ayah-id="${id}"]`);
+  if(mainBtn){ const b = mainBtn.querySelector('.ayah-btn.fav-active'); if(b){ b.classList.remove('fav-active'); b.innerHTML='☆ প্রিয়'; } }
+}
+
+/* ============ HISTORY ============ */
+function addHistory(moodId, ayah) {
+  const mood = MOODS.find(m => m.id === moodId);
+  const entry = {
+    mood: moodId, moodBn: mood ? mood.bn : moodId, moodEmoji: mood ? mood.emoji : '📖',
+    moodColor: mood ? mood.color : '--active-color',
+    ar: ayah.ar, pron: ayah.pron, bn: ayah.bn, en: ayah.en||ayah.bn, ref: ayah.ref,
+    ts: Date.now()
+  };
+  STATE.history.unshift(entry);
+  if(STATE.history.length > 20) STATE.history = STATE.history.slice(0,20);
+  saveState();
+}
+function renderHistoryPanel() {
+  const body = document.getElementById('history-body');
+  if(STATE.history.length === 0){
+    body.innerHTML = `<div class="fav-empty"><div class="fav-empty-icon">🕐</div><p>এখনো কোনো ইতিহাস নেই।</p></div>`;
+    return;
+  }
+  body.innerHTML = '';
+  STATE.history.forEach((h, i) => {
+    const item = document.createElement('div');
+    item.className = 'history-item';
+    item.style.animationDelay = (i * 0.04) + 's';
+    const date = new Date(h.ts);
+    const timeStr = date.toLocaleDateString('bn-BD') + ' ' + date.toLocaleTimeString('bn-BD', {hour:'2-digit',minute:'2-digit'});
+    item.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;padding-top:4px">
+        <div class="history-timeline-dot" style="background:var(${h.moodColor})"></div>
+        ${i < STATE.history.length-1 ? '<div style="width:1px;flex:1;background:var(--border);margin-top:4px"></div>' : ''}
+      </div>
+      <div class="history-body">
+        <div class="history-time">${timeStr}</div>
+        <div class="history-mood-tag" style="border-color:var(${h.moodColor});color:var(${h.moodColor})">${h.moodEmoji} ${h.moodBn}</div>
+        <div class="history-text" style="font-family:'Amiri',serif;font-size:16px;direction:rtl;text-align:right;margin-bottom:6px">${h.ar}</div>
+        ${STATE.showPronunciation ? `<div style="font-size:11px;color:var(--active-color);font-style:italic;margin-bottom:4px">${h.pron}</div>` : ''}
+        <div class="history-text">${STATE.language==='bn'?h.bn:h.en}</div>
+      </div>`;
+    body.appendChild(item);
+  });
+}
+
+/* ============ JOURNAL ============ */
+function updateJournalContext() {
+  const mood = MOODS.find(m => m.id === STATE.currentMood);
+  const label = document.getElementById('journal-context-label');
+  if(label) label.textContent = 'বর্তমান মুড: ' + (mood ? mood.emoji + ' ' + (STATE.language==='bn'?mood.bn:mood.en) : STATE.currentMood === 'istighfar' ? '🤲 ইস্তেগফার' : '—');
+  const ayahRef = document.getElementById('journal-ayah-ref-label');
+  if(ayahRef && STATE.currentAyah) ayahRef.textContent = STATE.currentAyah.ref;
+}
+function saveJournalEntry() {
+  const text = document.getElementById('journal-input').value.trim();
+  if(!text){ showToast('কিছু লিখুন...'); return; }
+  const entry = {
+    id: 'j-' + Date.now(), text, mood: STATE.currentMood,
+    moodEmoji: MOODS.find(m=>m.id===STATE.currentMood)?.emoji || '📖',
+    moodBn: MOODS.find(m=>m.id===STATE.currentMood)?.bn || STATE.currentMood || '',
+    ar: STATE.currentAyah?.ar || '', pron: STATE.currentAyah?.pron || '',
+    ayahBn: STATE.currentAyah?.bn || '', ayahRef: STATE.currentAyah?.ref || '',
+    ts: Date.now()
+  };
+  STATE.journal.unshift(entry);
+  saveState();
+  document.getElementById('journal-input').value = '';
+  renderJournalEntries();
+  showToast('জার্নাল সংরক্ষিত হয়েছে ✓');
+}
+function renderJournalEntries() {
+  const container = document.getElementById('journal-entries');
+  if(STATE.journal.length === 0){ container.innerHTML = '<div class="text-muted" style="text-align:center;padding:30px">এখনো কোনো নোট নেই।</div>'; return; }
+  container.innerHTML = '';
+  STATE.journal.forEach((e, i) => {
+    const item = document.createElement('div');
+    item.className = 'journal-entry';
+    item.style.animationDelay = (i * 0.04) + 's';
+    const date = new Date(e.ts);
+    const timeStr = date.toLocaleDateString('bn-BD') + ' ' + date.toLocaleTimeString('bn-BD',{hour:'2-digit',minute:'2-digit'});
+    item.innerHTML = `
+      <div class="journal-entry-header">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:14px">${e.moodEmoji}</span>
+          <span style="font-size:12px;color:var(--text2)">${e.moodBn||'—'}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="journal-entry-time">${timeStr}</span>
+          <button class="fav-remove" onclick="deleteJournal('${e.id}')">🗑</button>
+        </div>
+      </div>
+      <div class="journal-entry-text">${e.text.replace(/\n/g,'<br>')}</div>
+      ${e.ar ? `<div class="journal-entry-ayah" style="font-family:'Amiri',serif;font-size:16px;direction:rtl;text-align:right">${e.ar}</div>
+        ${STATE.showPronunciation&&e.pron?`<div class="journal-entry-ayah" style="font-style:italic;color:var(--active-color)">${e.pron}</div>`:''}
+        <div class="journal-entry-ayah">${e.ayahBn}</div>` : ''}`;
+    container.appendChild(item);
+  });
+}
+function deleteJournal(id) {
+  STATE.journal = STATE.journal.filter(e => e.id !== id);
+  saveState(); renderJournalEntries(); showToast('নোট মুছে ফেলা হয়েছে');
+}
+
+/* ============ REFLECTION ============ */
+let _reflectAyahId = null;
+function openReflection(ayahId) {
+  const card = document.querySelector(`[data-ayah-id="${ayahId}"]`);
+  if(!card) return;
+  _reflectAyahId = ayahId;
+  document.getElementById('reflection-ar').textContent = card.dataset.ar;
+  document.getElementById('reflection-pron').textContent = STATE.showPronunciation ? card.dataset.pron : '';
+  document.getElementById('reflection-pron').style.display = STATE.showPronunciation ? '' : 'none';
+  document.getElementById('reflection-meaning').textContent = STATE.language==='bn' ? card.dataset.bn : (card.dataset.en || card.dataset.bn);
+  document.getElementById('reflection-textarea').value = '';
+  const overlay = document.getElementById('reflection-overlay');
+  overlay.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  // Store for journal save
+  window._reflectData = {ar: card.dataset.ar, pron: card.dataset.pron, bn: card.dataset.bn, ref: card.dataset.ref};
+}
+function openReflectionRaw(arEnc, pronEnc, meaningEnc) {
+  const ar = decodeURIComponent(arEnc);
+  const pron = decodeURIComponent(pronEnc);
+  const meaning = decodeURIComponent(meaningEnc);
+  document.getElementById('reflection-ar').textContent = ar;
+  document.getElementById('reflection-pron').textContent = STATE.showPronunciation ? pron : '';
+  document.getElementById('reflection-pron').style.display = STATE.showPronunciation ? '' : 'none';
+  document.getElementById('reflection-meaning').textContent = meaning;
+  document.getElementById('reflection-textarea').value = '';
+  document.getElementById('reflection-overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+  window._reflectData = {ar, pron, bn: meaning, ref: ''};
+}
+function closeReflection() {
+  document.getElementById('reflection-overlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function saveReflectionToJournal() {
+  const text = document.getElementById('reflection-textarea').value.trim();
+  const d = window._reflectData || {};
+  const entry = {
+    id: 'jr-' + Date.now(),
+    text: text || '(ধ্যান করেছি)',
+    mood: STATE.currentMood, moodEmoji: MOODS.find(m=>m.id===STATE.currentMood)?.emoji || '🌿',
+    moodBn: MOODS.find(m=>m.id===STATE.currentMood)?.bn || 'ধ্যান',
+    ar: d.ar||'', pron: d.pron||'', ayahBn: d.bn||'', ayahRef: d.ref||'', ts: Date.now()
+  };
+  STATE.journal.unshift(entry); saveState(); closeReflection();
+  showToast('ধ্যান জার্নালে সংরক্ষিত হয়েছে ✓');
+}
+
+/* ============ AUDIO — GLOBAL CONTROLLER ============ */
+// ONE audio plays at a time. Always call AUDIO.stop() before AUDIO.play().
+const AUDIO = {
+  _btn:    null,   // active button element
+  _timer:  null,   // safety timeout
+  _audio:  null,   // HTMLAudioElement (if URL used)
+  _utt:    null,   // SpeechSynthesisUtterance (if speech used)
+  _alive:  false,  // guard against double-stop
+
+  /* ─── Stop everything, reset button ─── */
+  stop() {
+    if (!this._alive) return;
+    this._alive = false;
+
+    // Stop HTMLAudio
+    if (this._audio) {
+      try { this._audio.pause(); this._audio.currentTime = 0; } catch(e) {}
+      this._audio.onended = null;
+      this._audio.onerror = null;
+      this._audio = null;
+    }
+
+    // Stop Speech (cancel twice — Chrome sometimes needs it)
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      setTimeout(() => { try { window.speechSynthesis.cancel(); } catch(e) {} }, 50);
+    }
+    this._utt = null;
+
+    // Clear safety timer
+    if (this._timer) { clearTimeout(this._timer); this._timer = null; }
+
+    // Reset button
+    if (this._btn) {
+      this._btn.classList.remove('playing');
+      this._btn.innerHTML = '▶ শুনুন';
+      this._btn = null;
+    }
+  },
+
+  /* ─── Mark button as playing ─── */
+  _setPlaying(btn) {
+    this._btn   = btn;
+    this._alive = true;
+    btn.classList.add('playing');
+    btn.innerHTML = '<div class="audio-wave"><span></span><span></span><span></span><span></span><span></span></div> থামান';
+  },
+
+  /* ─── Main entry point ─── */
+  play(arabicText, btn, audioUrl) {
+    this.stop();            // always stop previous first
+    this._setPlaying(btn);
+
+    if (audioUrl) {
+      /* Path A — real MP3/OGG URL */
+      const aud = new Audio(audioUrl);
+      aud.preload = 'auto';
+      this._audio = aud;
+      aud.onended = () => this.stop();
+      aud.onerror = () => { this._audio = null; this._speak(arabicText); };
+      const p = aud.play();
+      if (p && p.catch) p.catch(() => { this._audio = null; this._speak(arabicText); });
+      this._timer = setTimeout(() => this.stop(), 90000);
+
+    } else {
+      /* Path B — Web Speech API */
+      this._speak(arabicText);
+    }
+  },
+
+  /* ─── Speech Synthesis with Chrome resume workaround ─── */
+  _speak(text) {
+    if (!window.speechSynthesis || !text) {
+      // Fallback: just animate for 4s so button doesn't stay stuck
+      this._timer = setTimeout(() => this.stop(), 4000);
+      return;
+    }
+
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang  = 'ar-SA';
+    utt.rate  = 0.78;
+    utt.pitch = 1;
+    utt.onend   = () => this.stop();
+    utt.onerror = (e) => { if (e.error !== 'interrupted') this.stop(); };
+    this._utt = utt;
+
+    // Chrome bug: speechSynthesis can get stuck in 'paused' state
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      if (!this._alive) return; // user may have stopped already
+      window.speechSynthesis.speak(utt);
+    }, 80);
+
+    // Safety timeout: some browsers never fire onend
+    this._timer = setTimeout(() => this.stop(), 50000);
+
+    // Chrome keepalive: resume every 10s to prevent auto-pause
+    const keepAlive = setInterval(() => {
+      if (!this._alive || !window.speechSynthesis) { clearInterval(keepAlive); return; }
+      if (window.speechSynthesis.speaking && window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      } else if (!window.speechSynthesis.speaking) {
+        clearInterval(keepAlive);
+      }
+    }, 10000);
+  }
+};
+
+/* ─── Ayah audio toggle ─── */
+function toggleAudio(id, btn) {
+  if (btn.classList.contains('playing')) {
+    AUDIO.stop();
+  } else {
+    const card = document.querySelector(`[data-ayah-id="${id}"]`);
+    const ar = card ? card.dataset.ar : '';
+    AUDIO.play(ar, btn);
+  }
+}
+
+/* ─── Istighfar audio toggle ─── */
+function toggleIstighfarAudio(idx, btn) {
+  if (btn.classList.contains('playing')) {
+    AUDIO.stop();
+  } else {
+    const d = ISTIGHFAR_DATA[idx];
+    if (d) AUDIO.play(d.ar, btn);
+  }
+}
+
+/* ============ FEEL BETTER LOOP ============ */
+function feelBetterYes() {
+  const wrap = document.getElementById('feel-better-wrap');
+  if(!wrap) return;
+  const msgs_bn = [
+    '🌟 আলহামদুলিল্লাহ! আল্লাহ আপনার হৃদয়ে শান্তি দিন।',
+    '💚 আপনার ভালো লাগছে জেনে মন আনন্দিত হলো। আল্লাহ আপনার সাথে আছেন।',
+    '☀️ প্রতিটি কঠিন মুহূর্তের পরে আলো আসে। আপনি সঠিক পথেই আছেন।',
+  ];
+  const msgs_en = [
+    '🌟 Alhamdulillah! May Allah keep peace in your heart.',
+    '💚 So glad you feel better. Allah is always with you.',
+    '☀️ After every hardship comes ease. You are doing well.',
+  ];
+  const msgs = STATE.language === 'bn' ? msgs_bn : msgs_en;
+  const msg = msgs[Math.floor(Math.random() * msgs.length)];
+  wrap.innerHTML = `<div class="feel-better-msg">${msg}</div>`;
+}
+
+function feelBetterNo(moodId) {
+  const ayahs = AYAH_DB[moodId] || [];
+  if(ayahs.length === 0) return;
+  // Pick next ayah, avoid consecutive repeat
+  let nextIdx = (STATE.lastShownAyahIndex + 1) % ayahs.length;
+  // If only one ayah, still show it
+  STATE.lastShownAyahIndex = nextIdx;
+  AUDIO.stop();
+  const container = document.getElementById('ayah-output');
+  container.innerHTML = '';
+  const card = createAyahCard(ayahs[nextIdx], `mood-${moodId}-${nextIdx}`, moodId);
+  container.appendChild(card);
+  // Re-add feel better block
+  const fbWrap = document.createElement('div');
+  fbWrap.className = 'feel-better-wrap';
+  fbWrap.id = 'feel-better-wrap';
+  fbWrap.innerHTML = `
+    <div class="feel-better-q">🌸 ${STATE.language==='bn'?'এখন কি একটু ভালো লাগছে?':'How do you feel now?'}</div>
+    <div class="feel-better-btns">
+      <button class="feel-better-yes" onclick="feelBetterYes()">✓ ${STATE.language==='bn'?'হ্যাঁ, ভালো লাগছে':'Yes, better now'}</button>
+      <button class="feel-better-no" onclick="feelBetterNo('${moodId}')">↻ ${STATE.language==='bn'?'আরেকটি আয়াত':'Another verse'}</button>
+    </div>`;
+  container.appendChild(fbWrap);
+  scrollToContent();
+}
+
+/* ============ TASBEEH COUNTER ============ */
+function initTasbeeh() {
+  updateTasbeehUI();
+}
+function tasbeehTap(e) {
+  STATE.tasbeehCount++;
+  saveState();
+  updateTasbeehUI();
+  // Ripple effect
+  const ripple = document.getElementById('tasbeeh-ripple');
+  ripple.classList.remove('pop');
+  void ripple.offsetWidth;
+  ripple.classList.add('pop');
+}
+function tasbeehReset() {
+  STATE.tasbeehCount = 0;
+  saveState();
+  updateTasbeehUI();
+  showToast('তাসবীহ রিসেট হয়েছে');
+}
+function toggleTasbeehPanel() {
+  document.getElementById('tasbeeh-panel').classList.toggle('open');
+}
+function checkPreset(n) {
+  // Highlight if reached
+  document.querySelectorAll('.tasbeeh-preset').forEach(b => {
+    b.classList.toggle('done', STATE.tasbeehCount >= parseInt(b.dataset.target));
+  });
+}
+function updateTasbeehUI() {
+  const c = STATE.tasbeehCount;
+  // Convert to Bengali numerals
+  const toBn = n => n.toString().replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+  document.getElementById('tasbeeh-fab-count').textContent = toBn(c);
+  document.getElementById('tasbeeh-big-num').textContent = toBn(c);
+  // Milestones
+  const mile = document.getElementById('tasbeeh-milestone');
+  if(c > 0 && c % 100 === 0) mile.textContent = `মাশাআল্লাহ! ${toBn(c)} বার! 🌟`;
+  else if(c === 99) mile.textContent = 'সুবহানাল্লাহ ৯৯ বার! 🤲';
+  else if(c === 33) mile.textContent = 'আলহামদুলিল্লাহ ৩৩ বার ✓';
+  else mile.textContent = c > 0 ? `${toBn(c)} তাসবীহ` : '';
+  // Preset highlight
+  document.querySelectorAll('.tasbeeh-preset').forEach(b => {
+    b.classList.toggle('done', c >= parseInt(b.dataset.target));
+  });
+}
+
+/* ============ 30-SECOND MOOD CHECK MODAL ============ */
+function scheduleMoodCheck() {
+  if(STATE.moodCheckShown) return;
+  setTimeout(() => {
+    if(!STATE.currentMood) {
+      document.getElementById('mood-check-modal').classList.add('show');
+      STATE.moodCheckShown = true;
+    }
+  }, 30000);
+}
+function closeMoodCheck() {
+  document.getElementById('mood-check-modal').classList.remove('show');
+}
+function moodCheckSelect(moodId) {
+  closeMoodCheck();
+  selectMood(moodId);
+}
+
+/* ============ COPY ============ */
+function copyAyah(id) {
+  const card = document.querySelector(`[data-ayah-id="${id}"]`);
+  if(!card) return;
+  const text = `${card.dataset.ar}\n\nউচ্চারণ: ${card.dataset.pron}\n\n${card.dataset.bn}\n\n${card.dataset.ref}`;
+  copyText(text);
+}
+function copyText(text) {
+  if(navigator.clipboard){ navigator.clipboard.writeText(text).then(() => showToast('কপি হয়েছে ✓')).catch(()=>{}); }
+  else { const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast('কপি হয়েছে ✓'); }
+}
+
+/* ============ SMART TEXT INPUT ============ */
+function onMoodTextInput(el) {
+  const val = el.value.trim();
+  const sendBtn = document.getElementById('mood-text-send');
+  sendBtn.classList.toggle('visible', val.length > 0);
+  // Auto-resize
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  // Detect mood
+  if(val.length > 2){ detectMoodFromText(val); }
+  else { hideMoodDetect(); }
+}
+function onMoodTextKey(e) { if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); submitMoodText(); } }
+function submitMoodText() {
+  const val = document.getElementById('mood-text-input').value.trim();
+  if(!val) return;
+  const detected = detectMoodFromText(val);
+  if(detected){ selectMood(detected); }
+  else { showToast('মুড শনাক্ত করা যায়নি — একটি বেছে নিন'); }
+  document.getElementById('mood-text-input').value = '';
+  document.getElementById('mood-text-send').classList.remove('visible');
+  hideMoodDetect();
+}
+function detectMoodFromText(text) {
+  // Normalize: lowercase, trim, collapse whitespace
+  const normalized = text.toLowerCase().trim().replace(/\s+/g, ' ');
+
+  let bestMood = null;
+  let bestScore = 0;
+
+  for (const [mood, keywords] of Object.entries(KEYWORD_MAP)) {
+    let score = 0;
+    for (const kw of keywords) {
+      // Use includes() so full sentences like "amar onek chinta hocche" match "chinta"
+      if (normalized.includes(kw.toLowerCase())) {
+        // Weight longer/more specific keywords higher to reduce false positives
+        score += kw.length > 5 ? 2 : 1;
+      }
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      bestMood = mood;
+    }
+  }
+
+  if (bestMood && bestScore > 0) {
+    const mood = MOODS.find(m => m.id === bestMood);
+    const chip = document.getElementById('mood-detect-chip');
+    document.getElementById('mood-detect-emoji').textContent = mood ? mood.emoji : '';
+    document.getElementById('mood-detect-label').textContent = 'শনাক্ত: ' + (mood ? (STATE.language === 'bn' ? mood.bn : mood.en) : bestMood);
+    chip.classList.add('show');
+    document.getElementById('intensity-row').classList.add('show');
+    return bestMood;
+  }
+
+  hideMoodDetect();
+  return null;
+}
+function hideMoodDetect() {
+  document.getElementById('mood-detect-chip').classList.remove('show');
+  document.getElementById('intensity-row').classList.remove('show');
+}
+function setIntensity(btn) {
+  STATE.intensity = btn.dataset.val;
+  document.querySelectorAll('.intensity-btn').forEach(b => b.classList.toggle('active', b===btn));
+}
+
+/* ============ LANGUAGE ============ */
+function setLanguage(lang) {
+  STATE.language = lang;
+  document.getElementById('lang-bn').classList.toggle('active', lang==='bn');
+  document.getElementById('lang-en').classList.toggle('active', lang==='en');
+  applyLanguage();
+  saveState();
+  // Re-render active content
+  if(STATE.currentMood && STATE.currentMood !== 'istighfar') renderAyahs(STATE.currentMood);
+  if(STATE.currentMood === 'istighfar') buildIstighfarContent();
+  buildDailyAyah();
+  if(document.getElementById('fav-overlay').classList.contains('show')) renderFavPanel();
+  if(document.getElementById('history-overlay').classList.contains('show')) renderHistoryPanel();
+  if(document.getElementById('journal-overlay').classList.contains('show')) renderJournalEntries();
+}
+function applyLanguage() {
+  document.querySelectorAll('[data-bn][data-en]').forEach(el => {
+    if(el.dataset.bn && el.dataset.en) el.textContent = STATE.language==='bn' ? el.dataset.bn : el.dataset.en;
+  });
+  document.getElementById('site-subtitle-text').textContent = STATE.language==='bn' ? 'আপনার অনুভূতির জন্য কোরআনের আলো' : 'Quranic Light for Your Feelings';
+  document.getElementById('mood-prompt-h2').textContent = STATE.language==='bn' ? 'আজ আপনার মন কেমন?' : 'How are you feeling today?';
+  document.getElementById('mood-prompt-p').textContent = STATE.language==='bn' ? 'একটি মুড বেছে নিন অথবা নিচে লিখুন' : 'Choose a mood or type below';
+  document.getElementById('daily-label').textContent = STATE.language==='bn' ? 'আজকের আয়াত' : "Today's Verse";
+  document.getElementById('breath-label').textContent = STATE.language==='bn' ? 'শ্বাস নিন... ছাড়ুন...' : 'Breathe in... breathe out...';
+  document.getElementById('pron-label-text').textContent = STATE.language==='bn' ? 'বাংলা উচ্চারণ' : 'Pronunciation';
+  document.getElementById('intensity-label-text').textContent = STATE.language==='bn' ? 'তীব্রতা:' : 'Intensity:';
+  document.getElementById('mood-text-input').placeholder = STATE.language==='bn' ? 'আপনার অনুভূতি লিখুন... (যেমন: মন খারাপ, একা মনে হচ্ছে, চিন্তিত)' : 'Describe your feeling... (e.g. feeling sad, anxious, lonely)';
+  // update mood card text
+  document.querySelectorAll('.mood-card').forEach(c => {
+    const nameEl = c.querySelector('.card-name');
+    const subEl = c.querySelector('.card-subtitle');
+    if(nameEl && nameEl.dataset.bn) nameEl.textContent = STATE.language==='bn' ? nameEl.dataset.bn : nameEl.dataset.en;
+    if(subEl && subEl.dataset.bn) subEl.textContent = STATE.language==='bn' ? subEl.dataset.bn : subEl.dataset.en;
+  });
+}
+
+/* ============ PRONUNCIATION TOGGLE ============ */
+function togglePronunciation() {
+  STATE.showPronunciation = !STATE.showPronunciation;
+  applyPronunciation();
+  saveState();
+}
+function applyPronunciation() {
+  const on = STATE.showPronunciation;
+  // Main toggle
+  const sw = document.getElementById('pron-main-toggle');
+  if(sw) sw.classList.toggle('on', on);
+  const navBtn = document.getElementById('pron-toggle-btn');
+  if(navBtn) navBtn.classList.toggle('active-btn', on);
+  // All pronunciation elements
+  document.querySelectorAll('.ayah-pronunciation,.istighfar-pron,.fav-item-pron,.daily-full-pron').forEach(el => {
+    if(on){ el.classList.remove('hidden'); el.style.maxHeight='200px'; el.style.opacity='1'; }
+    else  { el.classList.add('hidden'); el.style.maxHeight='0'; el.style.opacity='0'; }
+  });
+  document.getElementById('daily-pron').style.display = on ? '' : 'none';
+}
+
+/* ============ OVERLAYS ============ */
+function openOverlay(id) {
+  document.getElementById(id).classList.add('show');
+  document.body.style.overflow = 'hidden';
+  if(id === 'fav-overlay') renderFavPanel();
+  if(id === 'history-overlay') renderHistoryPanel();
+  if(id === 'journal-overlay') { renderJournalEntries(); updateJournalContext(); }
+}
+function closeOverlay(id) {
+  document.getElementById(id).classList.remove('show');
+  document.body.style.overflow = '';
+}
+// Close on backdrop click
+document.querySelectorAll('.overlay').forEach(ov => {
+  ov.addEventListener('click', e => { if(e.target === ov) closeOverlay(ov.id); });
+});
+
+/* ============ THEME COLOR ============ */
+function setThemeColor(colorVar) {
+  const val = getComputedStyle(document.documentElement).getPropertyValue(colorVar).trim();
+  document.documentElement.style.setProperty('--active-color', val);
+  document.documentElement.style.setProperty('--active-glow', hexToRgba(val, 0.25));
+  document.documentElement.style.setProperty('--active-soft', hexToRgba(val, 0.1));
+  // Update blob
+  document.getElementById('blob1').style.background = hexToRgba(val, 0.08);
+  document.getElementById('blob3').classList.add('active');
+}
+function hexToRgba(hex, alpha) {
+  hex = hex.trim();
+  if(hex.startsWith('#')){ const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgba(${r},${g},${b},${alpha})`; }
+  return `rgba(169,127,224,${alpha})`;
+}
+
+/* ============ TOAST ============ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+/* ============ REMINDER ============ */
+function scheduleReminder() {
+  const now = Date.now();
+  const sinceLastReminder = now - STATE.lastReminder;
+  // Show after 3 minutes of session, but not if shown in last hour
+  if(sinceLastReminder > 3600000 || STATE.lastReminder === 0){
+    setTimeout(showReminder, 3 * 60 * 1000); // 3 minutes
+  }
+}
+function showReminder() {
+  if(STATE.currentMood) return; // User already engaged
+  const popup = document.getElementById('reminder-popup');
+  const msgs = STATE.language === 'bn'
+    ? ['মনে শান্তি দরকার? একটি আয়াত পড়ুন।', 'এক মিনিট কুরআনের সাথে কাটান।', 'আল্লাহর কথা স্মরণ করুন।']
+    : ['Need peace? Read a verse.', 'Spend a moment with the Quran.', 'Remember Allah.'];
+  document.getElementById('reminder-body').textContent = msgs[Math.floor(Math.random()*msgs.length)];
+  popup.classList.add('show');
+  STATE.lastReminder = Date.now();
+  saveState();
+  setTimeout(dismissReminder, 8000);
+}
+function dismissReminder() { document.getElementById('reminder-popup').classList.remove('show'); }
+
+/* ============ SCROLL ============ */
+function scrollToContent() {
+  const el = document.querySelector('.content-area');
+  if(el) setTimeout(() => el.scrollIntoView({behavior:'smooth', block:'start'}), 100);
+}
+
+/* ============ PARTICLES ============ */
+function initParticles() {
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  for(let i=0; i<55; i++){
+    particles.push({
+      x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+      r: Math.random()*1.5+0.3, vx:(Math.random()-0.5)*0.2, vy:(Math.random()-0.5)*0.2,
+      o: Math.random()*0.4+0.05
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const color = getComputedStyle(document.documentElement).getPropertyValue('--active-color').trim() || '#A97FE0';
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0) p.x=canvas.width; if(p.x>canvas.width) p.x=0;
+      if(p.y<0) p.y=canvas.height; if(p.y>canvas.height) p.y=0;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = color.startsWith('#') ? hexToRgba(color,p.o) : `rgba(169,127,224,${p.o})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ============ KEYBOARD SHORTCUTS ============ */
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    closeReflection();
+    closeMoodCheck();
+    document.getElementById('tasbeeh-panel').classList.remove('open');
+    document.querySelectorAll('.overlay.show').forEach(ov => closeOverlay(ov.id));
+  }
+});
+// Close tasbeeh panel on outside click
+document.addEventListener('click', e => {
+  const panel = document.getElementById('tasbeeh-panel');
+  const fab = document.getElementById('tasbeeh-fab');
+  if(panel && fab && !fab.contains(e.target) && !panel.contains(e.target)){
+    panel.classList.remove('open');
+  }
+});
+
+/* ============ DAILY AMOL ============ */
+(function(){
+  const AMOLS = [
+    {
+      num:'১', name:'ইস্তেগফার', nameEn:'Istighfar',
+      parts:[
+        {ar:'أستغفر الله', pron:'আস্তাগফিরুল্লাহ'}
+      ],
+      qty:'১০০ বার',
+      fazilat:'গুনাহ মাফ হয়, অন্তর পবিত্র হয় এবং আল্লাহর রহমত লাভ হয়'
+    },
+    {
+      num:'২', name:'দরুদ শরীফ', nameEn:'Durood Sharif',
+      parts:[
+        {ar:'اللهم صل على محمد وعلى آل محمد كما صليت على إبراهيم وعلى آل إبراهيم إنك حميد مجيد',
+         pron:'আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিওঁ ওয়া আলা আ-লি মুহাম্মাদ, কামা সাল্লাইতা আলা ইবরাহিম ওয়া আলা আ-লি ইবরাহিম ইন্নাকা হামিদুম মাজিদ'},
+        {ar:'اللهم بارك على محمد وعلى آل محمد كما باركت على إبراهيم وعلى آل إبراهيم إنك حميد مجيد',
+         pron:'আল্লাহুম্মা বারিক আলা মুহাম্মাদিওঁ ওয়া আলা আ-লি মুহাম্মাদ, কামা বারাকতা আলা ইবরাহিম ওয়া আলা আ-লি ইবরাহিম ইন্নাকা হামিদুম মাজিদ'}
+      ],
+      qty:'১০ বার',
+      fazilat:'রাসূল সাল্লাল্লাহু আলাইহি ওয়াসাল্লামের প্রতি ভালোবাসা বৃদ্ধি পায় এবং অগণিত সওয়াব অর্জিত হয়'
+    },
+    {
+      num:'৩', name:'জিকির', nameEn:'Zikir',
+      parts:[
+        {ar:'سُبْحَانَ ٱللَّٰهِ وَبِحَمْدِهِ', pron:'সুবহানাল্লাহি ওয়া বিহামদিহি'}
+      ],
+      qty:'১০০ বার (সকাল/সন্ধ্যা)',
+      fazilat:'কিয়ামতের দিনে বিশাল নেকির কারণ হবে'
+    },
+    {
+      num:'৪', name:'কোরআন তেলাওয়াত', nameEn:'Quran Recitation',
+      parts:[
+        {ar:'ذَٰلِكَ ٱلْكِتَابُ لَا رَيْبَ فِيهِ', pron:'যালিকাল কিতাবু লা রাইবা ফিহি'}
+      ],
+      qty:'কমপক্ষে ১ পৃষ্ঠা',
+      fazilat:'আল্লাহর নৈকট্য লাভ হয় এবং অন্তরে প্রশান্তি আসে'
+    },
+    {
+      num:'৫', name:'মাসনুন দোয়া', nameEn:'Masnoon Dua',
+      parts:[
+        {ar:'رَبَّنَا آتِنَا فِي ٱلدُّنْيَا حَسَنَةً وَفِي ٱلْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ ٱلنَّارِ',
+         pron:'রাব্বানা আতিনা ফিদ-দুনিয়া হাসানাতাও ওয়া ফিল আখিরাতি হাসানাতাও ওয়া কিনা আজাবান্নার'}
+      ],
+      qty:'যত বার ইচ্ছা',
+      fazilat:'দুনিয়া ও আখিরাতে কল্যাণ লাভ হয়'
+    },
+    {
+      num:'৬', name:'নফল নামাজ', nameEn:'Nafl Salah',
+      parts:[
+        {ar:'سُبْحَانَ رَبِّيَ الْأَعْلَى', pron:'সুবহানা রব্বিয়াল আলা'}
+      ],
+      qty:'তাহাজ্জুদ / চাশত / আওয়াবিন (যেকোনো ১টি)',
+      fazilat:'আল্লাহর সন্তুষ্টি অর্জন এবং ফরজের ঘাটতি পূরণ'
+    },
+    {
+      num:'৭', name:'সালাম ও ভরসার দোয়া', nameEn:'Salam & Tawakkul',
+      parts:[
+        {ar:'السَّلَامُ عَلَيْكُمْ',              pron:'আসসালামু আলাইকুম'},
+        {ar:'حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ', pron:'হাসবুনাল্লাহু ওয়া নিআমাল ওয়াকিল'}
+      ],
+      qty:'সারাদিন',
+      fazilat:'আল্লাহর উপর ভরসা দৃঢ় হয় এবং সকল বিপদে আল্লাহই যথেষ্ট হন'
+    }
+  ];
+
+  /* ── helpers ── */
+  const bn = n => String(n).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
+  const TOTAL = AMOLS.length;
+  let done = [];
+  let activeAudioBtn = null;
+
+  /* ── persistence ── */
+  function storeKey(){ return 'mk_amol_' + new Date().toDateString(); }
+  function load(){ try{ const v=localStorage.getItem(storeKey()); if(v) done=JSON.parse(v)||[]; }catch(e){} }
+  function save(){ try{ localStorage.setItem(storeKey(), JSON.stringify(done)); }catch(e){} }
+
+  /* ── progress UI ── */
+  function updateProgress(){
+    const n = done.length;
+    document.getElementById('da-bar').style.width = Math.round(n/TOTAL*100)+'%';
+    document.getElementById('da-badge').textContent = bn(n)+' / '+bn(TOTAL)+' আমল সম্পন্ন';
+  }
+
+  /* ── audio ── */
+  function stopAudio(){
+    if(window.speechSynthesis) window.speechSynthesis.cancel();
+    if(activeAudioBtn){
+      activeAudioBtn.classList.remove('playing');
+      activeAudioBtn.textContent = '🔊 শুনুন';
+      activeAudioBtn = null;
+    }
+  }
+
+  function speakText(text, btn){
+    if(btn === activeAudioBtn){ stopAudio(); return; }
+    stopAudio();
+    if(!window.speechSynthesis){ return; }
+    activeAudioBtn = btn;
+    btn.classList.add('playing');
+    btn.textContent = '◼ থামান';
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = 'bn-BD'; utt.rate = 0.82;
+    const reset = () => {
+      if(activeAudioBtn===btn){
+        btn.classList.remove('playing');
+        btn.textContent = '🔊 শুনুন';
+        activeAudioBtn = null;
+      }
+    };
+    utt.onend = reset;
+    utt.onerror = () => {
+      const u2 = new SpeechSynthesisUtterance(text);
+      u2.rate = 0.8; u2.onend = reset; u2.onerror = reset;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(u2);
+    };
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utt);
+  }
+
+  /* ── render one amol card ── */
+  function render(){
+    updateProgress();
+    const slot   = document.getElementById('da-slot');
+    const finish = document.getElementById('da-finish');
+
+    if(done.length >= TOTAL){
+      slot.innerHTML = '';
+      // show finish with fade-in
+      finish.style.display = '';
+      // force reflow then animate
+      finish.offsetHeight;
+      finish.classList.add('da-finish-show');
+      return;
+    }
+    finish.style.display = 'none';
+    finish.classList.remove('da-finish-show');
+
+    /* find first incomplete */
+    const idx = AMOLS.findIndex((_,i) => !done.includes(i));
+    if(idx < 0) return;
+    const a = AMOLS[idx];
+
+    /* build card element (NO inline onclick with text) */
+    const card = document.createElement('div');
+    card.className = 'da-card';  // starts invisible (opacity:0, translateY:14px)
+
+    /* step label */
+    const step = document.createElement('div');
+    step.className = 'da-step';
+    step.textContent = 'আমল '+a.num+' / '+bn(TOTAL);
+    card.appendChild(step);
+
+    /* name */
+    const nm = document.createElement('div'); nm.className='da-name'; nm.textContent=a.name;
+    card.appendChild(nm);
+    const en = document.createElement('div'); en.className='da-name-en'; en.textContent=a.nameEn;
+    card.appendChild(en);
+
+    /* parts: arabic + pronunciation row */
+    a.parts.forEach(pt => {
+      const ar = document.createElement('div'); ar.className='da-ar'; ar.textContent=pt.ar;
+      card.appendChild(ar);
+
+      const row = document.createElement('div'); row.className='da-prow';
+      const ptxt = document.createElement('div'); ptxt.className='da-ptext';
+      ptxt.textContent = '🔊 '+pt.pron;
+      const abtn = document.createElement('button'); abtn.className='da-abtn';
+      abtn.textContent = '🔊 শুনুন';
+      abtn.addEventListener('click', () => speakText(pt.pron, abtn));
+      row.appendChild(ptxt);
+      row.appendChild(abtn);
+      card.appendChild(row);
+    });
+
+    /* divider */
+    const dv = document.createElement('div'); dv.className='da-divider';
+    card.appendChild(dv);
+
+    /* quantity */
+    const qty = document.createElement('div'); qty.className='da-qty';
+    const ql = document.createElement('span'); ql.className='da-qty-lbl'; ql.textContent='পরিমাণ';
+    const qv = document.createElement('span'); qv.className='da-qty-val'; qv.textContent='📌 '+a.qty;
+    qty.appendChild(ql); qty.appendChild(qv);
+    card.appendChild(qty);
+
+    /* fazilat */
+    const faz = document.createElement('div'); faz.className='da-fazilat';
+    faz.textContent = '✨ '+a.fazilat;
+    card.appendChild(faz);
+
+    /* complete button */
+    const btn = document.createElement('button'); btn.className='da-btn';
+    const rip = document.createElement('div'); rip.className='da-btn-rip';
+    btn.appendChild(rip);
+    btn.appendChild(document.createTextNode(' ✓  আমি এই আমল সম্পন্ন করেছি'));
+    btn.addEventListener('click', () => complete(idx, card, btn));
+    card.appendChild(btn);
+
+    /* inject into slot, then trigger entry animation on next frame */
+    slot.innerHTML = '';
+    slot.appendChild(card);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        card.classList.add('da-enter');
+      });
+    });
+  }
+
+  function complete(idx, card, btn){
+    stopAudio();
+    if(done.includes(idx)) return;
+
+    // lock button immediately — fade it out
+    btn.classList.add('locked');
+
+    // ripple flash
+    const rip = card.querySelector('.da-btn-rip');
+    if(rip){ rip.style.opacity='1'; setTimeout(()=>{ rip.style.opacity='0'; }, 280); }
+
+    // short pause → exit animation
+    setTimeout(() => {
+      // 1. exit current card
+      card.classList.remove('da-enter');
+      card.classList.add('da-exit');
+
+      // 2. after exit completes: update data, progress, enter next
+      setTimeout(() => {
+        done.push(idx);
+        save();
+        // progress bar + badge update (badge gets pulse)
+        updateProgress();
+        const badge = document.getElementById('da-badge');
+        if(badge){
+          badge.classList.remove('pulse');
+          badge.offsetHeight; // reflow
+          badge.classList.add('pulse');
+        }
+        // render next card (or finish screen)
+        render();
+      }, 400); // matches exit transition duration
+
+    }, 180);
+  }
+
+  function reset(){
+    stopAudio();
+    const finish = document.getElementById('da-finish');
+    if(finish){ finish.classList.remove('da-finish-show'); }
+    done = []; save();
+    // brief pause so finish fades before card appears
+    setTimeout(render, 320);
+  }
+
+  /* ── boot ── */
+  function boot(){
+    load();
+    render();
+    document.getElementById('da-restart').addEventListener('click', reset);
+  }
+
+  /* attach to DOMContentLoaded or run now */
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+
+/* ============ START ============ */
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
